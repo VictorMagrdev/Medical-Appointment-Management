@@ -1,4 +1,5 @@
-use crate::infrastructure::data::db::AppState;
+use crate::infrastructure::data::db_pg::AppState;
+use crate::infrastructure::data::get_db::GetDb;
 use axum::extract::{Path, State};
 use axum::http::StatusCode;
 use axum::response::IntoResponse;
@@ -32,7 +33,7 @@ pub async fn post_paciente(
         .bind(email)
         .bind(celular)
         .bind(seguro_id)
-        .execute(&state.get_db())
+        .execute(state.get_db())
         .await
     {
         return Err((
@@ -50,7 +51,7 @@ pub async fn delete_paciente(
 ) -> Result<impl IntoResponse, impl IntoResponse> {
     if let Err(e) = sqlx::query("CALL public.eliminar_paciente($1)")
         .bind(id)
-        .execute(&state.get_db())
+        .execute(state.get_db())
         .await
     {
         return Err((
@@ -89,7 +90,7 @@ pub async fn put_paciente(
             .bind(email)
             .bind(celular)
             .bind(seguro_id)
-            .fetch_one(&state.get_db())
+            .fetch_one(state.get_db())
             .await
     {
         return Err((

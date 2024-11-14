@@ -1,5 +1,8 @@
+use mongodb::Client;
 use sqlx::postgres::PgPoolOptions;
 use sqlx::{PgPool, Result};
+use crate::infrastructure::data::db_mongo::ClientState;
+use crate::infrastructure::data::get_db::GetDb;
 
 #[derive(Clone)]
 pub struct AppState {
@@ -10,11 +13,13 @@ impl AppState {
     fn new(db: PgPool) -> Self {
         Self { db }
     }
-    pub fn get_db(&self) -> PgPool {
-        self.db.clone()
+    
+}
+impl GetDb<PgPool> for AppState {
+    fn get_db(&self) -> &PgPool {
+        &self.db
     }
 }
-
 pub async fn connect_db() -> Result<AppState, sqlx::Error> {
     let database_url = "postgres://postgres:root@localhost:5432/doctorya";
 
