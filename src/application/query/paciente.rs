@@ -1,4 +1,4 @@
-use crate::infrastructure::data::db_pg::AppState;
+use crate::infrastructure::data::db::AppState;
 use axum::extract::State;
 use axum::http::StatusCode;
 use axum::response::IntoResponse;
@@ -6,13 +6,12 @@ use axum::Json;
 use serde_json::{json, Value};
 use sqlx::Row;
 use std::collections::HashMap;
-use crate::infrastructure::data::get_db::GetDb;
 
 pub async fn get_pacientes(
     State(state): State<AppState>,
 ) -> Result<impl IntoResponse, impl IntoResponse> {
     let rows = match sqlx::query("SELECT * FROM public.obtener_pacientes()")
-        .fetch_all(state.get_db())
+        .fetch_all(&state.get_db_pg())
         .await
     {
         Ok(rows) => rows,

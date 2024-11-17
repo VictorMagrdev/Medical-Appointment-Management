@@ -1,5 +1,3 @@
-use crate::infrastructure::data::db_mongo::ClientState;
-use crate::infrastructure::data::get_db::GetDb;
 use axum::extract::State;
 use axum::http::StatusCode;
 use axum::response::IntoResponse;
@@ -7,34 +5,41 @@ use axum::Json;
 use bson::doc;
 use chrono::NaiveDate;
 use serde_json::Value;
+use crate::infrastructure::data::db::AppState;
 
 pub async fn post_auditoria(
-    State(client): State<ClientState>,
+    State(client): State<AppState>,
     Json(payload): Json<Value>,
 ) -> Result<impl IntoResponse, StatusCode> {
     // Extrae y valida los datos del payload JSON
-    let fecha = payload.get("fecha")
+    let fecha = payload
+        .get("fecha")
         .and_then(|v| v.as_str())
         .and_then(|s| NaiveDate::parse_from_str(s, "%Y-%m-%d").ok())
         .ok_or(StatusCode::BAD_REQUEST)?;
 
-    let nombre_paciente = payload.get("nombre_paciente")
+    let nombre_paciente = payload
+        .get("nombre_paciente")
         .and_then(|v| v.as_str())
         .unwrap_or("")
         .to_string();
-    let nombre_doctor = payload.get("nombre_doctor")
+    let nombre_doctor = payload
+        .get("nombre_doctor")
         .and_then(|v| v.as_str())
         .unwrap_or("")
         .to_string();
-    let motivo_cita = payload.get("motivo_cita")
+    let motivo_cita = payload
+        .get("motivo_cita")
         .and_then(|v| v.as_str())
         .unwrap_or("")
         .to_string();
-    let diagnostico = payload.get("diagnostico")
+    let diagnostico = payload
+        .get("diagnostico")
         .and_then(|v| v.as_str())
         .unwrap_or("")
         .to_string();
-    let medicamentos_recetados = payload.get("medicamentos_recetados")
+    let medicamentos_recetados = payload
+        .get("medicamentos_recetados")
         .and_then(|v| v.as_str())
         .unwrap_or("")
         .to_string();
@@ -48,20 +53,19 @@ pub async fn post_auditoria(
         "medicamentos_recetados": medicamentos_recetados,
     };
 
-    let auditorias = client.get_db().database("doctorya").collection("auditoria");
+    let auditorias = client.get_db_mongo().database("doctorya").collection("auditoria");
 
     match auditorias.insert_one(new_doc).await {
         Ok(result) => {
             println!("Documento insertado: {:?}", result.inserted_id);
             Ok(StatusCode::CREATED)
-        },
+        }
         Err(err) => {
             eprintln!("Error al insertar el documento: {:?}", err);
             Err(StatusCode::INTERNAL_SERVER_ERROR)
         }
     }
 }
-
 
 /*
 pub async fn delete_auditoria(
