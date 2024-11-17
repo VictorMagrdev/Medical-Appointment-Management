@@ -1,11 +1,11 @@
-use std::collections::HashMap;
+use crate::infrastructure::data::db::AppState;
 use axum::extract::State;
 use axum::http::StatusCode;
-use axum::Json;
 use axum::response::IntoResponse;
+use axum::Json;
 use serde_json::{json, Value};
 use sqlx::Row;
-use crate::infrastructure::data::db::AppState;
+use std::collections::HashMap;
 
 pub async fn get_historias_clinicas(
     State(state): State<AppState>,
@@ -29,13 +29,9 @@ pub async fn get_historias_clinicas(
         let mut historia_clinica = HashMap::new();
         historia_clinica.insert("id".to_string(), json!(row.get::<i32, _>("id")));
         historia_clinica.insert("datos".to_string(), json!(row.get::<Value, _>("datos")));
-        historia_clinica.insert(
-            "cita_id".to_string(),
-            json!(row.get::<i32, _>("cita_id")),
-        );
+        historia_clinica.insert("cita_id".to_string(), json!(row.get::<i32, _>("cita_id")));
         historias_clinicas.push(historia_clinica);
     }
 
     Ok(Json(historias_clinicas))
 }
-

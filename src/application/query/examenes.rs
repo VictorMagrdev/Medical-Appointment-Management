@@ -1,11 +1,11 @@
-use std::collections::HashMap;
+use crate::infrastructure::data::db::AppState;
 use axum::extract::State;
 use axum::http::StatusCode;
-use axum::Json;
 use axum::response::IntoResponse;
+use axum::Json;
 use serde_json::{json, Value};
 use sqlx::Row;
-use crate::infrastructure::data::db::AppState;
+use std::collections::HashMap;
 
 pub async fn get_examenes(
     State(state): State<AppState>,
@@ -48,4 +48,3 @@ pub async fn get_examenes(
 
     Ok(Json(examenes))
 }
-

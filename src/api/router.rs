@@ -8,7 +8,7 @@ use crate::application::command::historias_clinicas::{
 use crate::application::command::medicamentos::{
     delete_medicamento, post_medicamento, put_medicamento,
 };
-use crate::application::command::medicos::{delete_medico, put_medico};
+use crate::application::command::medicos::{delete_medico, post_medico, put_medico};
 use crate::application::command::paciente::{delete_paciente, post_paciente, put_paciente};
 use crate::application::command::seguro_medico::post_seguro_medico;
 use crate::application::query::paciente::get_pacientes;
@@ -46,7 +46,9 @@ pub fn create_router(state: AppState) -> Router {
                 .route(
                     "/seguros-medicos/:id",
                     put(put_medico).delete(delete_medico),
-                ),
+                )
+                .route("/medicos", post(post_medico))
+                .route("/medicos/:id", put(put_medico).delete(delete_medico)),
         )
         .with_state(state)
 }
