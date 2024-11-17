@@ -6,12 +6,12 @@ create type estado_medicamento as enum ('pendiente', 'entregado');
 create type tipo_informe as enum ('informe de citas', 'examenes');
 create type estado_examen as enum ('pendiente', 'efectuado');
 
-create table especialidades(
+create table public.especialidades(
 	id serial primary key,
  	nombre varchar(65) not null unique
 );
 
-create table seguro_medico (
+create table public.seguro_medico (
     id serial primary key,
     nombre varchar(255) not null,
     tipo tipo_seguro,
@@ -32,7 +32,7 @@ create table public.pacientes (
     seguro_id int references seguro_medico(id)
 );
 
-create table medicos (
+create table public.medicos (
     id serial primary key,
     nombre varchar(255) not null,
     identificacion varchar(50) unique not null,
@@ -43,14 +43,14 @@ create table medicos (
     foreign key (especialidad_id) references especialidades(id)
 );
 
-create table calendario (
+create table public.calendario (
     fecha date not null,
     hora time not null,
     medico_id int references medicos(id),
     primary key (fecha, hora, medico_id)
 );
 
-create table citas (
+create table public.citas (
     id serial primary key,
     fecha date not null,
     hora time not null,
@@ -61,13 +61,13 @@ create table citas (
     foreign key (fecha, hora, medico_id) references calendario(fecha, hora, medico_id)
 );
 
-create table historias_clinicas (
+create table public.historias_clinicas (
     id serial primary key,
 	datos jsonb, /*  fecha date not null, sintomas text, diagnostico text, tratamiento text, observaciones text,*/
     cita_id int references citas(id)
 );
 
-create table medicamentos (
+create table public.medicamentos (
     id serial primary key,
     nombre varchar(255) not null,
     principio_activo varchar(255),
@@ -79,7 +79,7 @@ create table medicamentos (
     historia_clinica_id int references historias_clinicas(id)
 );
 
-create table examenes (
+create table public.examenes (
     id serial primary key,
     nombre varchar(255) not null,
     costo decimal(10, 2),
@@ -89,7 +89,7 @@ create table examenes (
     historia_clinica_id int references historias_clinicas(id)
 );
 
-create table resultados_examenes (
+create table public.resultados_examenes (
     id serial primary key,
     diagnostico text,
     posible_tratamiento text,
@@ -97,7 +97,7 @@ create table resultados_examenes (
     medico_id int references medicos(id)
 );
 
-create table remisiones_medicas (
+create table public.remisiones_medicas (
     id serial primary key,
     fecha date not null,
     motivo_remision text,
@@ -105,20 +105,11 @@ create table remisiones_medicas (
     historia_clinica_id int references historias_clinicas(id)
 );
 
-create table informes (
+create table public.informes (
     id serial primary key,
     fecha date not null,
     tipo_informe tipo_informe,
-    contenido json
+    contenido jsonb
 );
 
-create table documento_auditoria (
-    id serial primary key,
-    fecha date not null,
-    nombre_paciente varchar(255) not null,
-    nombre_doctor varchar(255) not null,
-    motivo_cita text,
-    diagnostico text,
-    medicamentos_recetados text
-);
 
