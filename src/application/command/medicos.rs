@@ -1,4 +1,3 @@
-
 use crate::infrastructure::data::db::AppState;
 use axum::extract::{Path, State};
 use axum::http::StatusCode;
@@ -112,9 +111,7 @@ pub async fn put_medico(
         .unwrap_or("")
         .to_string();
 
-    if let Err(e) = sqlx::query(
-        "SELECT * FROM public.modificar_medico($1, $2, $3, $4, $5, $6, $7)",
-    )
+    if let Err(e) = sqlx::query("SELECT * FROM public.modificar_medico($1, $2, $3, $4, $5, $6, $7)")
         .bind(id)
         .bind(nombre)
         .bind(identificacion)
@@ -133,4 +130,3 @@ pub async fn put_medico(
 
     Ok(StatusCode::OK)
 }
-

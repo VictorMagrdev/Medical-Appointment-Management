@@ -35,7 +35,6 @@ pub async fn post_seguro_medico(
         .and_then(|v| v.as_str())
         .unwrap_or("")
         .to_string();
-    
 
     if let Err(e) = sqlx::query("call public.crear_seguro_medico($1, $2::tipo_seguro, $3, $4, $5);")
         .bind(nombre)
@@ -107,14 +106,14 @@ pub async fn put_seguro_medico(
     if let Err(e) = sqlx::query(
         "SELECT * FROM public.modificar_seguro_medico($1, $2, $3::tipo_seguro, $4, $5, $6)",
     )
-        .bind(id)
-        .bind(nombre)
-        .bind(tipo_seguro)
-        .bind(fecha_inicio)
-        .bind(fecha_final)
-        .bind(celular_contacto)
-        .fetch_one(&state.get_db_pg())
-        .await
+    .bind(id)
+    .bind(nombre)
+    .bind(tipo_seguro)
+    .bind(fecha_inicio)
+    .bind(fecha_final)
+    .bind(celular_contacto)
+    .fetch_one(&state.get_db_pg())
+    .await
     {
         return Err((
             StatusCode::INTERNAL_SERVER_ERROR,
@@ -124,4 +123,3 @@ pub async fn put_seguro_medico(
 
     Ok(StatusCode::OK)
 }
-

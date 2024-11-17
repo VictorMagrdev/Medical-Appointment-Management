@@ -1,6 +1,6 @@
+use mongodb::{options::ClientOptions, Client};
 use sqlx::postgres::PgPoolOptions;
 use sqlx::{PgPool, Result};
-use mongodb::{options::ClientOptions, Client};
 
 #[derive(Clone)]
 pub struct AppState {
@@ -9,11 +9,15 @@ pub struct AppState {
 }
 
 impl AppState {
-    fn new(db_pg: PgPool,db_mongo: Client) -> Self {
+    fn new(db_pg: PgPool, db_mongo: Client) -> Self {
         Self { db_pg, db_mongo }
     }
-    pub fn get_db_pg(&self) -> PgPool { self.db_pg.clone() }
-    pub fn get_db_mongo(&self) -> Client { self.db_mongo.clone() }
+    pub fn get_db_pg(&self) -> PgPool {
+        self.db_pg.clone()
+    }
+    pub fn get_db_mongo(&self) -> Client {
+        self.db_mongo.clone()
+    }
 }
 async fn connect_pg_db() -> Result<PgPool> {
     let database_url = "postgres://postgres:EllenJoe@localhost:5432/doctorya";
@@ -46,13 +50,13 @@ pub async fn connect_db_mongo() -> Result<Client> {
         .await
         .unwrap();
     let client = Client::with_options(client_options).unwrap();
-    
+
     Ok(client)
 }
 pub async fn connect_db() -> Result<AppState, sqlx::Error> {
     let db_pg = connect_pg_db().await?;
     let db_client = connect_db_mongo().await?;
-    let state = AppState::new(db_pg,db_client);
+    let state = AppState::new(db_pg, db_client);
 
     Ok(state)
 }

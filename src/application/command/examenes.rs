@@ -1,5 +1,3 @@
-
-
 use crate::infrastructure::data::db::AppState;
 use axum::extract::{Path, State};
 use axum::http::StatusCode;
@@ -17,10 +15,7 @@ pub async fn post_examen(
         .and_then(|v| v.as_str())
         .unwrap_or("")
         .to_string();
-    let costo = payload
-        .get("costo")
-        .and_then(|v| v.as_f64())
-        .unwrap_or(0.0)as f32;
+    let costo = payload.get("costo").and_then(|v| v.as_f64()).unwrap_or(0.0) as f32;
     let cubre_seguro = payload
         .get("cubre_seguro")
         .and_then(|v| v.as_bool())
@@ -87,10 +82,7 @@ pub async fn put_examen(
         .and_then(|v| v.as_str())
         .unwrap_or("")
         .to_string();
-    let costo = payload
-        .get("costo")
-        .and_then(|v| v.as_f64())
-        .unwrap_or(0.0)as f32;
+    let costo = payload.get("costo").and_then(|v| v.as_f64()).unwrap_or(0.0) as f32;
     let cubre_seguro = payload
         .get("cubre_seguro")
         .and_then(|v| v.as_bool())
@@ -113,15 +105,15 @@ pub async fn put_examen(
     if let Err(e) = sqlx::query(
         "SELECT * FROM public.modificar_examen($1, $2, $3, $4, $5, $6::estado_examen, $7)",
     )
-        .bind(id)
-        .bind(nombre)
-        .bind(costo)
-        .bind(cubre_seguro)
-        .bind(fecha_realizacion)
-        .bind(estado)
-        .bind(historia_clinica_id)
-        .fetch_one(&state.get_db_pg())
-        .await
+    .bind(id)
+    .bind(nombre)
+    .bind(costo)
+    .bind(cubre_seguro)
+    .bind(fecha_realizacion)
+    .bind(estado)
+    .bind(historia_clinica_id)
+    .fetch_one(&state.get_db_pg())
+    .await
     {
         return Err((
             StatusCode::INTERNAL_SERVER_ERROR,
@@ -131,4 +123,3 @@ pub async fn put_examen(
 
     Ok(StatusCode::OK)
 }
-

@@ -10,6 +10,7 @@ mod api;
 mod application;
 mod infrastructure;
 mod r#macro;
+mod test;
 
 #[tokio::main]
 async fn main() {
