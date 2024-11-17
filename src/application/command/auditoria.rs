@@ -81,7 +81,7 @@ pub async fn delete_auditoria(
     }
 }
 
-pub async fn put_auditoria(
+pub async fn put_auditoria_by_id(
     State(client): State<AppState>,
     Path(id): Path<i64>,
     Json(payload): Json<Value>,
@@ -115,8 +115,34 @@ pub async fn put_auditoria(
 
     match auditorias.update_one(doc! { "id": id }, update ).await{
         Ok(result) => {
-            println!("Documento eliminado: {:?}", result.modified_count);
+            println!("Documento actualizado: {:?}", result.modified_count);
             Ok(StatusCode::OK)
+        }
+        Err(err) => {
+            eprintln!("Error al insertar el documento: {:?}", err);
+            Err(StatusCode::INTERNAL_SERVER_ERROR)
+        }
+    }
+}
+
+pub async fn  get_auditoria_by_id(
+    State(client): State<AppState>,
+    Path(id): Path<i64>,
+) -> Result<impl IntoResponse, StatusCode> {
+
+    let auditorias = client.get_db_mongo().database("doctorya")
+        .collection::<bson::Document>("auditoria");
+
+    let result = auditorias.find_one(doc! {"id": id}).await;
+
+    match result{
+        Ok(Some(resp)) => {
+            println!("Documento encontrado: {:?}", resp);
+            Ok(Json(resp))
+        }
+        Ok(None) => {
+            println!("Documento no encontrado.");
+            Err(StatusCode::NOT_FOUND)
         }
         Err(err) => {
             eprintln!("Error al insertar el documento: {:?}", err);
