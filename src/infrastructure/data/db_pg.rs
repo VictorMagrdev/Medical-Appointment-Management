@@ -21,7 +21,7 @@ impl GetDb<PgPool> for AppState {
     }
 }
 pub async fn connect_db() -> Result<AppState, sqlx::Error> {
-    let database_url = "postgres://postgres:root@localhost:5432/doctorya";
+    let database_url = "postgres://postgres:postgres@localhost:5432/doctorya";
 
     let db = match PgPoolOptions::new()
         .max_connections(5)

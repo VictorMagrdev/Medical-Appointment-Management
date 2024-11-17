@@ -1,31 +1,84 @@
 use crate::infrastructure::data::db_mongo::ClientState;
-use axum::extract::{Path, State};
-use axum::http::{Error, StatusCode};
+use crate::infrastructure::data::get_db::GetDb;
+use axum::extract::State;
+use axum::http::StatusCode;
 use axum::response::IntoResponse;
 use axum::Json;
+use bson::doc;
+use chrono::NaiveDate;
 use serde_json::Value;
 
 pub async fn post_auditoria(
     State(client): State<ClientState>,
     Json(payload): Json<Value>,
-) -> Result<impl IntoResponse, Error> {
-    Ok(StatusCode::CREATED)
+) -> Result<impl IntoResponse, StatusCode> {
+    // Extrae y valida los datos del payload JSON
+    let fecha = payload.get("fecha")
+        .and_then(|v| v.as_str())
+        .and_then(|s| NaiveDate::parse_from_str(s, "%Y-%m-%d").ok())
+        .ok_or(StatusCode::BAD_REQUEST)?;
+
+    let nombre_paciente = payload.get("nombre_paciente")
+        .and_then(|v| v.as_str())
+        .unwrap_or("")
+        .to_string();
+    let nombre_doctor = payload.get("nombre_doctor")
+        .and_then(|v| v.as_str())
+        .unwrap_or("")
+        .to_string();
+    let motivo_cita = payload.get("motivo_cita")
+        .and_then(|v| v.as_str())
+        .unwrap_or("")
+        .to_string();
+    let diagnostico = payload.get("diagnostico")
+        .and_then(|v| v.as_str())
+        .unwrap_or("")
+        .to_string();
+    let medicamentos_recetados = payload.get("medicamentos_recetados")
+        .and_then(|v| v.as_str())
+        .unwrap_or("")
+        .to_string();
+
+    let new_doc = doc! {
+        "fecha": fecha.to_string(),
+        "nombre_paciente": nombre_paciente,
+        "nombre_doctor": nombre_doctor,
+        "motivo_cita": motivo_cita,
+        "diagnostico": diagnostico,
+        "medicamentos_recetados": medicamentos_recetados,
+    };
+
+    let auditorias = client.get_db().database("doctorya").collection("auditoria");
+
+    match auditorias.insert_one(new_doc).await {
+        Ok(result) => {
+            println!("Documento insertado: {:?}", result.inserted_id);
+            Ok(StatusCode::CREATED)
+        },
+        Err(err) => {
+            eprintln!("Error al insertar el documento: {:?}", err);
+            Err(StatusCode::INTERNAL_SERVER_ERROR)
+        }
+    }
 }
- 
- pub async fn delete_auditoria(
-     State(client): State<ClientState>,
-     Path(id): Path<i32>,
- ) -> Result<impl IntoResponse, Error>  {
-     todo!("a futuro");
-     Ok(StatusCode::OK)
- }
- 
- pub async fn put_auditoria(
-     State(client): State<ClientState>,
-     Path(id): Path<i32>,
-     Json(payload): Json<Value>,
- ) -> Result<impl IntoResponse, Error>  {
-     todo!("a futuro");
-     Ok(StatusCode::OK)
-     
- }
+
+
+/*
+pub async fn delete_auditoria(
+    State(client): State<ClientState>,
+    Path(id): Path<i32>,
+) -> Result<impl IntoResponse, Error>  {
+    todo!("a futuro");
+    Ok(StatusCode::OK)
+}
+
+pub async fn put_auditoria(
+    State(client): State<ClientState>,
+    Path(id): Path<i32>,
+    Json(payload): Json<Value>,
+) -> Result<impl IntoResponse, Error>  {
+    todo!("a futuro");
+    Ok(StatusCode::OK)
+
+}
+*/
