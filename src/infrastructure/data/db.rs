@@ -16,7 +16,7 @@ impl AppState {
     pub fn get_db_mongo(&self) -> Client { self.db_mongo.clone() }
 }
 async fn connect_pg_db() -> Result<PgPool> {
-    let database_url = "postgres://postgres:postgres@localhost:5432/doctorya";
+    let database_url = "postgres://postgres:EllenJoe@localhost:5432/doctorya";
 
     let db = match PgPoolOptions::new()
         .max_connections(5)
