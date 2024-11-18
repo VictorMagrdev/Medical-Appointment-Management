@@ -1,10 +1,11 @@
-create type tipo_seguro as enum ('publico', 'privado');
-create type sexo as enum ('masculino', 'femenino', 'otro');
-create type estado_cita as enum ('programada', 'cancelada', 'completada');
-create type forma_farmaceutica as enum ('tableta', 'ampolla', 'suspension');
-create type estado_medicamento as enum ('pendiente', 'entregado');
-create type tipo_informe as enum ('informe de citas', 'examenes');
-create type estado_examen as enum ('pendiente', 'efectuado');
+create type public.tipo_seguro as enum ('publico', 'privado');
+create type public.sexo as enum ('masculino', 'femenino', 'otro');
+create type public.estado_cita as enum ('programada', 'cancelada', 'completada');
+create type public.estado_seguro as enum ('activo', 'inactivo');
+create type public.forma_farmaceutica as enum ('tableta', 'ampolla', 'suspension');
+create type public.estado_medicamento as enum ('pendiente', 'entregado');
+create type public.tipo_informe as enum ('informe de citas', 'examenes');
+create type public.estado_examen as enum ('pendiente', 'efectuado');
 
 create table public.especialidades(
 	id serial primary key,
@@ -17,7 +18,8 @@ create table public.seguro_medico (
     tipo tipo_seguro,
     fecha_inicio date not null,
     fecha_final date not null,
-    celular_contacto varchar(15)
+    estado estado_seguro,
+    celular_contacto varchar(15) not null
 );
 
 create table public.pacientes (
@@ -27,8 +29,8 @@ create table public.pacientes (
     fecha_nacimiento date not null,
     sexo sexo,
     direccion varchar(255),
-    email varchar(255),
-    celular varchar(15),
+    email varchar(255) not null,
+    celular varchar(15) not null,
     seguro_id int references seguro_medico(id)
 );
 
@@ -38,8 +40,8 @@ create table public.medicos (
     identificacion varchar(50) unique not null,
     registro_medico varchar(50) unique not null,
     especialidad_id integer,
-    email varchar(255),
-    celular varchar(15),
+    email varchar(255) not null,
+    celular varchar(15) not null,
     foreign key (especialidad_id) references especialidades(id)
 );
 
@@ -84,7 +86,7 @@ create table public.examenes (
     nombre varchar(255) not null,
     costo decimal(10, 2),
     cubre_seguro boolean,
-    fecha_realizacion date,
+    fecha_realizacion date not null,
     estado estado_examen,
     historia_clinica_id int references historias_clinicas(id)
 );
