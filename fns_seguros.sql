@@ -12,8 +12,7 @@ language plpgsql
 as $$
 begin
 	if p_fecha_inicio > p_fecha_final then
-		raise notice 'La fecha inicial debe ser menor a la final';
-		return;
+		raise exception 'La fecha inicial debe ser menor a la final';
 	end if;
 
     insert into seguro_medico (nombre, tipo, fecha_inicio, fecha_final, celular_contacto)
@@ -31,7 +30,6 @@ exception
 	when others then
 		rollback;
 		raise notice 'Error: Ocurrio un error inesperado: %', sqlerrm;
-
 end;
 $$;
 
@@ -40,19 +38,16 @@ create or replace procedure eliminar_seguro_medico(p_id int)
 language plpgsql
 as $$
 begin
-    if not exists (select 1 from seguro_medico where id = p_id) then
-        raise exception 'El seguro médico con ID % no existe.', p_id;
-		return;
+	
+	if not exists (select 1 from seguro_medico where id = p_id) then
+        raise exception 'Error: El seguro medico con ID % no existe', p_id;
     end if;
 
     if exists (select 1 from seguro_medico where id = p_id and estado = 'activo') then
         raise exception 'No se puede eliminar un seguro activo. Asegúrese de que el seguro esté inactivo antes de eliminarlo.';
-		return;
     end if;
 
     delete from seguro_medico where id = p_id;
-    
-    raise notice 'Seguro médico con ID % ha sido eliminado correctamente.', p_id;
 exception
     when foreign_key_violation then
         raise exception 'Error: No se puede eliminar este seguro médico debido a dependencias en otras tablas.';
@@ -63,7 +58,7 @@ $$;
 
 
 // MODIFICAR SEGURO MEDICO
-create or replace function modificar_seguro_medico(
+create or replace procedure modificar_seguro_medico(
     p_id int,
     p_nombre varchar,
     p_tipo tipo_seguro,
@@ -86,8 +81,8 @@ begin
     end if;
 
     if p_fecha_inicio > p_fecha_final then
-        raise exception 'La fecha de inicio no puede ser mayor que la fecha final.';
-    end if;
+		raise exception 'La fecha inicial debe ser menor a la final';
+	end if;
 
     if exists (select 1 from seguro_medico where id = p_id and estado = 'inactivo') then
         raise exception 'No se puede modificar un seguro inactivo. Asegúrese de que el seguro esté activo antes de modificarlo.';
@@ -127,13 +122,13 @@ returns table(
 language plpgsql
 as $$
 begin
-    return query select * from seguro_medico;
-	if not found then
-        raise notice 'No se encontraron registros en la tabla de seguro medico.';
+	if not exists (select 1 from public.seguro_medico) then
+        raise exception 'No se encontraron registros en la tabla de pacientes.';
     end if;	
+    return query select * from seguro_medico;
 exception
 	when others then
-		raise notice 'Error: Ocurrio un error inesperado: %', sqlerrm;
+		raise exception 'Error: Ocurrio un error inesperado: %', sqlerrm;
 end;
 $$;
 

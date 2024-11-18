@@ -50,7 +50,7 @@ begin
     delete from public.pacientes where id = p_id;
 	
 	if not found then
-		raise notice 'Error: El paciente con ID % no existe', p_id;
+		raise exception 'Error: El paciente con ID % no existe', p_id;
 	end if;
 	
 exception
@@ -130,7 +130,7 @@ language plpgsql
 as $$
 begin
 	if not exists (select 1 from public.pacientes) then
-        raise notice 'No se encontraron registros en la tabla de pacientes.';
+        raise exception 'No se encontraron registros en la tabla de pacientes.';
     end if;	
 
     return query select * from public.pacientes;
