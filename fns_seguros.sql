@@ -48,6 +48,7 @@ begin
     end if;
 
     delete from seguro_medico where id = p_id;
+	
 exception
     when foreign_key_violation then
         raise exception 'Error: No se puede eliminar este seguro médico debido a dependencias en otras tablas.';
@@ -96,15 +97,21 @@ begin
         celular_contacto = p_celular_contacto
     where id = p_id;
 
-    return query select id, nombre, tipo, fecha_inicio, fecha_final, celular_contacto
-    from seguro_medico
-    where id = p_id;
-
 exception
-    when foreign_key_violation then
-        raise exception 'Error: No se puede modificar este seguro médico debido a dependencias en otras tablas.';
-    when others then
-        raise exception 'Error inesperado: %', sqlerrm;
+	when foreign_key_violation then
+        raise notice 'Error: No se puede modificar este seguro médico debido a dependencias en otras tablas.';
+
+	when date_out_of_range then
+        rollback;
+        raise notice 'La fecha de nacimiento está fuera de un rango permitido.';
+	
+	when null_value_not_allowed then
+		rollback;
+		raise notice 'Uno de los valores obligatorios es NULL';
+	
+	when others then
+		rollback;
+		raise notice 'Error: Ocurrio un error inesperado: %', sqlerrm;
 end;
 $$;
 
@@ -128,7 +135,7 @@ begin
     return query select * from seguro_medico;
 exception
 	when others then
-		raise exception 'Error: Ocurrio un error inesperado: %', sqlerrm;
+		raise notice 'Error: Ocurrio un error inesperado: %', sqlerrm;
 end;
 $$;
 

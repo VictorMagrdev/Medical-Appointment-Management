@@ -93,23 +93,23 @@ begin
 exception 
 	when unique_violation then
 		rollback;
-		raise exception 'La identificacion ya existe en el sistema.';
+		raise notice 'La identificacion ya existe en el sistema.';
 	
 	when foreign_key_violation then
 		rollback;
-		raise exception 'El seguro asociado no existe.';
+		raise notice 'El seguro asociado no existe.';
 
 	when date_out_of_range then
         rollback;
-        raise exception 'La fecha de nacimiento está fuera de un rango permitido.';
+        raise notice 'La fecha de nacimiento está fuera de un rango permitido.';
 	
 	when null_value_not_allowed then
 		rollback;
-		raise exception 'Uno de los valores obligatorios es NULL';
+		raise notice 'Uno de los valores obligatorios es NULL';
 	
 	when others then
 		rollback;
-		raise exception 'Error: Ocurrio un error inesperado: %', sqlerrm;
+		raise notice 'Error: Ocurrio un error inesperado: %', sqlerrm;
 end;
 $$;
 

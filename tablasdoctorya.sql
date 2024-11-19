@@ -8,12 +8,12 @@ create type public.tipo_informe as enum ('informe de citas', 'examenes');
 create type public.estado_examen as enum ('pendiente', 'efectuado');
 
 create table public.especialidades(
-	id serial primary key,
+	id integer primary key default nextval('public.especialidades_id_seq'),
  	nombre varchar(65) not null unique
 );
 
 create table public.seguro_medico (
-    id serial primary key,
+    id bigint primary key default nextval('public.seguro_medico_id_seq'),
     nombre varchar(255) not null,
     tipo tipo_seguro,
     fecha_inicio date not null,
@@ -35,7 +35,7 @@ create table public.pacientes (
 );
 
 create table public.medicos (
-    id serial primary key,
+    id integer primary key default nextval('public.medicos_id_seq'),
     nombre varchar(255) not null,
     identificacion varchar(50) unique not null,
     registro_medico varchar(50) unique not null,
@@ -53,7 +53,7 @@ create table public.calendario (
 );
 
 create table public.citas (
-    id serial primary key,
+    id serial primary key default nextval('public.citas_id_seq'),
     fecha date not null,
     hora time not null,
     motivo varchar(255),
@@ -64,13 +64,13 @@ create table public.citas (
 );
 
 create table public.historias_clinicas (
-    id serial primary key,
+    id bigint primary key default nextval('public.historias_clinicas_id_seq'),
 	datos jsonb, /*  fecha date not null, sintomas text, diagnostico text, tratamiento text, observaciones text,*/
     cita_id int references citas(id)
 );
 
 create table public.medicamentos (
-    id serial primary key,
+    id integer primary key default nextval('public.medicamentos_id_seq'),
     nombre varchar(255) not null,
     principio_activo varchar(255),
     forma_farmaceutica forma_farmaceutica,
@@ -92,7 +92,7 @@ create table public.examenes (
 );
 
 create table public.resultados_examenes (
-    id serial primary key,
+    id integer primary key default nextval('public.resultados_examenes_id_seq'),
     diagnostico text,
     posible_tratamiento text,
     examen_id int references examenes(id),
@@ -100,7 +100,7 @@ create table public.resultados_examenes (
 );
 
 create table public.remisiones_medicas (
-    id serial primary key,
+    id integer primary key default nextval('public.remisiones_medicas_id_seq'),
     fecha date not null,
     motivo_remision text,
     medico_id int references medicos(id),
@@ -108,7 +108,7 @@ create table public.remisiones_medicas (
 );
 
 create table public.informes (
-    id serial primary key,
+    id integer primary key default nextval('public.informes_id_seq'),
     fecha date not null,
     tipo_informe tipo_informe,
     contenido jsonb
