@@ -1,6 +1,6 @@
 -- CREAR HISTORIA CLÍNICA
 create or replace procedure crear_historia_clinica(
-    p_datos xml,
+    p_datos jsonb,
     p_cita_id bigint
 )
 language plpgsql
@@ -45,7 +45,7 @@ $$;
 -- MODIFICAR HISTORIA CLÍNICA
 create or replace procedure modificar_historia_clinica(
     p_id int,
-    p_datos xml,
+    p_datos jsonb,
     p_cita_id int
 )
 language plpgsql
@@ -79,7 +79,7 @@ $$;
 create or replace function obtener_historias_clinicas()
 returns table(
     id bigint,
-    datos xmlx1,
+    datos jsonb,
     cita_id int
 )
 language plpgsql
