@@ -102,7 +102,7 @@ create table public.resultados_examenes (
 create table public.remisiones_medicas (
     id integer primary key default nextval('public.remisiones_medicas_id_seq'),
     fecha date not null,
-    motivo_remision text,
+    motivo_remision xml,
     medico_id int references medicos(id),
     historia_clinica_id int references historias_clinicas(id)
 );
