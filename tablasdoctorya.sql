@@ -53,7 +53,7 @@ create table public.calendario (
 );
 
 create table public.citas (
-    id serial primary key default nextval('public.citas_id_seq'),
+    id int primary key default nextval('public.citas_id_seq'),
     fecha date not null,
     hora time not null,
     motivo varchar(255),
@@ -65,7 +65,7 @@ create table public.citas (
 
 create table public.historias_clinicas (
     id bigint primary key default nextval('public.historias_clinicas_id_seq'),
-	datos jsonb, /*  fecha date not null, sintomas text, diagnostico text, tratamiento text, observaciones text,*/
+	datos xml not null, /*  fecha date not null, sintomas text, diagnostico text, tratamiento text, observaciones text,*/
     cita_id int references citas(id)
 );
 
@@ -73,9 +73,9 @@ create table public.medicamentos (
     id integer primary key default nextval('public.medicamentos_id_seq'),
     nombre varchar(255) not null,
     principio_activo varchar(255),
-    forma_farmaceutica forma_farmaceutica,
-    dosis varchar(50),
-    indicaciones_uso text,
+    forma_farmaceutica forma_farmaceutica not null,
+    dosis varchar(50) not null,
+    indicaciones_uso text not null,
     duracion_tratamiento varchar(50),
     estado estado_medicamento,
     historia_clinica_id int references historias_clinicas(id)

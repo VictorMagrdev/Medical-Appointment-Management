@@ -61,14 +61,6 @@ create or replace procedure modificar_medico(
     p_especialidad_id int,
     p_email varchar,
     p_celular varchar
-) returns table(
-    id int,
-    nombre varchar,
-    identificacion varchar,
-    registro_medico varchar,
-    especialidad_id int,
-    email varchar,
-    celular varchar
 )
 language plpgsql
 as $$

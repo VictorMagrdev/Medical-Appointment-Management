@@ -34,7 +34,7 @@ end;
 $$;
 
 // ELIMINAR SEGURO MEDICO
-create or replace procedure eliminar_seguro_medico(p_id int)
+create or replace procedure eliminar_seguro_medico(p_id bigint)
 language plpgsql
 as $$
 begin
@@ -60,19 +60,12 @@ $$;
 
 // MODIFICAR SEGURO MEDICO
 create or replace procedure modificar_seguro_medico(
-    p_id int,
+    p_id bigint,
     p_nombre varchar,
     p_tipo tipo_seguro,
     p_fecha_inicio date,
     p_fecha_final date,
     p_celular_contacto varchar
-) returns table(
-    id int,
-    nombre varchar,
-    tipo tipo_seguro,
-    fecha_inicio date,
-    fecha_final date,
-    celular_contacto varchar
 )
 language plpgsql
 as $$
@@ -119,7 +112,7 @@ $$;
 // OBTENER SEGUROS MEDICOS
 create or replace function obtener_seguros_medicos()
 returns table(
-    id int,
+    id bigint,
     nombre varchar,
     tipo tipo_seguro,
     fecha_inicio date,
