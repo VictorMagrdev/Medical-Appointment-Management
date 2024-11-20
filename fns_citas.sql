@@ -1,14 +1,3 @@
-create table public.citas (
-    id int primary key default nextval('public.citas_id_seq'),
-    fecha date not null,
-    hora time not null,
-    motivo varchar(255),
-    estado estado_cita not null,
-    paciente_id int references public.pacientes(id),
-    medico_id int references medicos(id),
-);
-
-
 --public.citas
 
 // CREAR CITA
@@ -24,7 +13,7 @@ language plpgsql
 as $$
 begin	
 
-    insert into public.citas (fecha, hora, motivo, estado, paciente_id, medico_id)
+    insert into public.citas (fecha, hora, motivo, 'programada', paciente_id, medico_id)
     values (p_nombre);
 
 exception
@@ -46,6 +35,26 @@ exception
 	
 end;
 $$;
+
+create or replace procedure public.cambiar_estado_cita(
+	p_id int,
+	p_estado estado_cita
+)
+language plpgsql
+as $$
+begin
+	update public.citas
+	set estado = p_estado
+	where id = p_id;
+	
+	if not found then
+		raise exception 'La cita no existe';
+	end if;	
+
+end;
+$$;
+
+// TRIGGERS CITAS
 
 create or replace function public.verificar_disponibilidad_medico()
 returns trigger as $$
@@ -84,6 +93,30 @@ after insert on public.citas
 for each row execute procedure public.generar_cita_calendario();
 
 
-
+create or replace function public.actualizar_calendario()
+returns trigger as $$
+begin
+	if new.estado == 'completada' or new.estado == 'programada' then
+		delete from public.calendario
+		where fecha = old.fecha and
+		hora = old.hora and
+		medico_id = old.medico_id;
+	end if; 
+end;
+$$ language plpgsql;
+	
+create trigger tg_actualizar_calendario
+after update on public.citas
+for wach row execute procedure public.actualizar_calendario();
+	
+	
+	
+	
+	
+	
+	
+	
+	
+end
 
 

@@ -46,10 +46,10 @@ create table public.medicos (
 );
 
 create table public.calendario (
-    fecha date not null,
+    id serial primary key,
+	fecha date not null,
     hora time not null,
-    medico_id int references medicos(id),
-    primary key (fecha, hora, medico_id)
+    medico_id int references medicos(id)
 );
 
 create table public.citas (

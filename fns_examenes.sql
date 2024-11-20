@@ -1,16 +1,7 @@
--- Crear tabla examenes
-create table public.examenes (
-    id integer primary key default nextval('public.examenes_id_seq'),
-    nombre varchar(255) not null,
-    costo decimal(10, 2),
-    cubre_seguro boolean,
-    fecha_realizacion date not null,
-    estado estado_examen,
-    historia_clinica_id int references historias_clinicas(id)
-);
+
 
 -- Crear Examen
-create or replace procedure crear_examen(
+create or replace procedure public.crear_examen(
     p_nombre varchar,
     p_costo decimal,
     p_cubre_seguro boolean,
@@ -38,7 +29,7 @@ end;
 $$;
 
 -- Eliminar Examen
-create or replace procedure eliminar_examen(p_id int)
+create or replace procedure public.eliminar_examen(p_id int)
 language plpgsql
 as $$
 begin
@@ -55,7 +46,7 @@ end;
 $$;
 
 -- Modificar Examen
-create or replace procedure modificar_examen(
+create or replace procedure public.modificar_examen(
     p_id int,
     p_nombre varchar,
     p_costo decimal,
@@ -94,7 +85,7 @@ end;
 $$;
 
 -- Obtener Exámenes
-create or replace function obtener_examenes()
+create or replace function public.obtener_examenes()
 returns table(
     id int,
     nombre varchar,
