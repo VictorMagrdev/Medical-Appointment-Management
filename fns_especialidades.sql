@@ -1,0 +1,94 @@
+--public.especialidades
+
+// CREAR ESPECIALIDAD
+create or replace procedure public.crear_especialidad(
+    p_nombre varchar
+)
+language plpgsql
+as $$
+begin	
+
+    insert into public.especialidades (nombre)
+    values (p_nombre);
+
+exception
+	when unique_violation then
+		rollback;
+		raise notice 'El nombre de la especialidad ya existe en el sistema.';
+	
+	when null_value_not_allowed then
+		rollback;
+		raise notice 'Uno de los valores obligatorios es NULL';
+	
+	when others then
+		rollback;
+		raise notice 'Error: Ocurrio un error inesperado: %', sqlerrm;
+	
+end;
+$$;
+
+// ELIMINAR ESPECIALIDAD
+create or replace procedure public.eliminar_especialidad(p_id int)
+language plpgsql
+as $$
+begin
+    delete from public.especialidades where id = p_id;
+	
+	if not found then
+		raise exception 'Error: La especialidad con ID % no existe', p_id;
+	end if;
+	
+exception
+	when others then
+        raise notice 'Error: Ocurrio un error inesperado: %', sqlerrm;
+end;
+$$;
+
+// MODIFICAR PACIENTE 
+create or replace procedure public.modificar_especialidad(
+    p_id int, 
+    p_nombre varchar
+)
+language plpgsql
+as $$
+begin
+
+    update public.especialidades
+    set nombre = p_nombre
+    where id = p_id;
+
+	if not found then
+	    raise exception 'La especialidad no existe';
+	end if;
+
+exception 
+	when unique_violation then
+		rollback;
+		raise notice 'El nombre de la especialidad ya existe en el sistema.';
+	
+	when null_value_not_allowed then
+		rollback;
+		raise notice 'Uno de los valores obligatorios es NULL';
+	
+	when others then
+		rollback;
+		raise notice 'Error: Ocurrio un error inesperado: %', sqlerrm;
+end;
+$$;
+
+
+create or replace function public.verificar_especialidad_en_uso()
+returns trigger as $$
+begin 
+	
+end;
+$$ languague plpgsql;
+
+create trigger tg_verificar_especialidad_en_uso
+before delete on public.especialidades 
+for each row execute procedure public.verificar_especialidad_en_uso
+
+
+
+
+
