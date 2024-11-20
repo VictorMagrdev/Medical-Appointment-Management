@@ -122,16 +122,6 @@ $$ language plpgsql;
 create trigger tg_actualizar_calendario
 after update on public.citas
 for each row execute procedure public.actualizar_calendario();
-
-
-	
-	
-	
-	
-	
-	
-	
-	
 end
 
 
