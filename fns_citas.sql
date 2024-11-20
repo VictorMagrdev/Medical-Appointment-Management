@@ -69,6 +69,11 @@ begin
 	) then
 		raise exception 'No es posible crear la cita en esta fecha y hora';
 	end if;
+	return new;
+exception
+    when others then
+        raise notice 'Error al verificar disponibilidad: %', SQLERRM;
+        return null;
 end;
 $$ language plpgsql;
 
@@ -84,6 +89,11 @@ declare
 begin 
 	insert into public.calendario(fecha, hora, medico_id)
 	values(new.fecha, new.hora, new.medico_id);
+	return new;
+exception
+	when other then
+		raise notice  'Error al generar cita en el calendario: %', SQLERRM;
+		return null;
 end;
 $$ language plpgsql;
 
@@ -96,19 +106,24 @@ for each row execute procedure public.generar_cita_calendario();
 create or replace function public.actualizar_calendario()
 returns trigger as $$
 begin
-	if new.estado == 'completada' or new.estado == 'programada' then
+	if new.estado = 'completada' or new.estado = 'cancelada' then
 		delete from public.calendario
 		where fecha = old.fecha and
 		hora = old.hora and
 		medico_id = old.medico_id;
+		if not found then
+			raise exception 'No se encontro la cita en el calendario';
+		end if;
 	end if; 
+	return new;
 end;
 $$ language plpgsql;
 	
 create trigger tg_actualizar_calendario
 after update on public.citas
-for wach row execute procedure public.actualizar_calendario();
-	
+for each row execute procedure public.actualizar_calendario();
+
+
 	
 	
 	
