@@ -82,7 +82,7 @@ create table public.medicamentos (
 );
 
 create table public.examenes (
-    id serial primary key,
+    id integer primary key default nextval('public.examenes_id_seq'),
     nombre varchar(255) not null,
     costo decimal(10, 2),
     cubre_seguro boolean,
