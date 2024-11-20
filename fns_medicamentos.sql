@@ -1,5 +1,5 @@
 -- Crear Medicamento
-create or replace procedure crear_medicamento(
+create or replace procedure public.crear_medicamento(
     p_nombre varchar,
     p_principio_activo varchar,
     p_forma_farmaceutica forma_farmaceutica,
@@ -31,7 +31,7 @@ end;
 $$;
 
 -- Eliminar Medicamento
-create or replace procedure eliminar_medicamento(p_id int)
+create or replace procedure public.eliminar_medicamento(p_id int)
 language plpgsql
 as $$
 begin
@@ -48,7 +48,7 @@ end;
 $$;
 
 -- Modificar Medicamento
-create or replace procedure modificar_medicamento(
+create or replace procedure public.modificar_medicamento(
     p_id int,
     p_nombre varchar,
     p_principio_activo varchar,
@@ -93,7 +93,7 @@ end;
 $$;
 
 -- Obtener Medicamentos
-create or replace function obtener_medicamentos()
+create or replace function public.obtener_medicamentos()
 returns table(
     id int,
     nombre varchar,

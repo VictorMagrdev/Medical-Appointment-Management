@@ -1,7 +1,7 @@
 --medicos
 
 // CREAR MEDICO
-create or replace procedure crear_medico(
+create or replace procedure public.crear_medico(
     p_nombre varchar,
     p_identificacion varchar,
     p_registro_medico varchar,
@@ -37,7 +37,7 @@ $$;
 
 
 // ELIMINAR MEDICO
-create or replace procedure eliminar_medico(p_id int)
+create or replace procedure public.eliminar_medico(p_id int)
 language plpgsql
 as $$
 begin
@@ -53,7 +53,7 @@ end;
 $$;
 
 // MODIFICAR MEDICO
-create or replace procedure modificar_medico(
+create or replace procedure public.modificar_medico(
     p_id int,
     p_nombre varchar,
     p_identificacion varchar,
@@ -98,7 +98,7 @@ end;
 $$;
 
 // OBTENER MEDICOS
-create or replace function obtener_medicos()
+create or replace function public.obtener_medicos()
 returns table(
     id int,
     nombre varchar,

@@ -1,5 +1,5 @@
 -- CREAR HISTORIA CLÍNICA
-create or replace procedure crear_historia_clinica(
+create or replace procedure public.crear_historia_clinica(
     p_datos jsonb,
     p_cita_id bigint
 )
@@ -25,7 +25,7 @@ end;
 $$;
 
 -- ELIMINAR HISTORIA CLÍNICA
-create or replace procedure eliminar_historia_clinica(p_id int)
+create or replace procedure public.eliminar_historia_clinica(p_id int)
 language plpgsql
 as $$
 begin
@@ -43,7 +43,7 @@ end;
 $$;
 
 -- MODIFICAR HISTORIA CLÍNICA
-create or replace procedure modificar_historia_clinica(
+create or replace procedure public.modificar_historia_clinica(
     p_id int,
     p_datos jsonb,
     p_cita_id int
@@ -76,7 +76,7 @@ end;
 $$;
 
 -- OBTENER HISTORIAS CLINICAS
-create or replace function obtener_historias_clinicas()
+create or replace function public.obtener_historias_clinicas()
 returns table(
     id bigint,
     datos jsonb,

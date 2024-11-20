@@ -31,7 +31,7 @@ create table public.pacientes (
     direccion varchar(255),
     email varchar(255) not null,
     celular varchar(15) not null,
-    seguro_id int references seguro_medico(id)
+    seguro_id int references seguro_medico(id) on delete cascade
 );
 
 create table public.medicos (
@@ -42,7 +42,7 @@ create table public.medicos (
     especialidad_id integer,
     email varchar(255) not null,
     celular varchar(15) not null,
-    foreign key (especialidad_id) references especialidades(id)
+    foreign key (especialidad_id) references especialidades(id) on delete cascade
 );
 
 create table public.calendario (

@@ -1,7 +1,7 @@
 --seguros medicos
 
 // CREAR SEGURO MEDICO
-create or replace procedure crear_seguro_medico(
+create or replace procedure public.crear_seguro_medico(
     p_nombre varchar,
     p_tipo tipo_seguro,
     p_fecha_inicio date,
@@ -34,7 +34,7 @@ end;
 $$;
 
 // ELIMINAR SEGURO MEDICO
-create or replace procedure eliminar_seguro_medico(p_id bigint)
+create or replace procedure public.eliminar_seguro_medico(p_id bigint)
 language plpgsql
 as $$
 begin
@@ -59,7 +59,7 @@ $$;
 
 
 // MODIFICAR SEGURO MEDICO
-create or replace procedure modificar_seguro_medico(
+create or replace procedure public.modificar_seguro_medico(
     p_id bigint,
     p_nombre varchar,
     p_tipo tipo_seguro,
@@ -110,7 +110,7 @@ $$;
 
 
 // OBTENER SEGUROS MEDICOS
-create or replace function obtener_seguros_medicos()
+create or replace function public.obtener_seguros_medicos()
 returns table(
     id bigint,
     nombre varchar,
