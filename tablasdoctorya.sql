@@ -1,6 +1,6 @@
 create type public.tipo_seguro as enum ('publico', 'privado');
 create type public.sexo as enum ('masculino', 'femenino', 'otro');
-create type public.estado_cita as enum ('programada', 'cancelada', 'completada');
+create type public.estado_cita as enum ('programada', 'en proceso' 'cancelada', 'completada');
 create type public.estado_seguro as enum ('activo', 'inactivo');
 create type public.forma_farmaceutica as enum ('tableta', 'ampolla', 'suspension');
 create type public.estado_medicamento as enum ('pendiente', 'entregado');
@@ -92,8 +92,8 @@ create table public.examenes (
 
 create table public.resultados_examenes (
     id integer primary key default nextval('public.resultados_examenes_id_seq'),
-    diagnostico text,
-    posible_tratamiento text,
+    diagnostico text not null,
+    posible_tratamiento text not null,
     examen_id int references examenes(id),
     medico_id int references medicos(id)
 );

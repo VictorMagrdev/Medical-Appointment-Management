@@ -122,6 +122,17 @@ $$ language plpgsql;
 create trigger tg_actualizar_calendario
 after update on public.citas
 for each row execute procedure public.actualizar_calendario();
-end
 
-
+create or replace function public.validar_cambio_estado()
+returns trigger as $$
+begin
+	if new.estado = 'completada' and old.estado != 'en proceso' then
+		raise exception 'No se puede cambiar el estado a "completada" si el estado anterior no era "en proceso"';
+	end if; 
+	return new;
+end;
+$$ language plpgsql;
+	
+create trigger tg_actualizar_calendario
+before update on public.citas
+for each row execute procedure public.validar_cambio_estado();

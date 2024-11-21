@@ -98,17 +98,6 @@ end;
 $$;
 
 
-create or replace function public.verificar_especialidad_en_uso()
-returns trigger as $$
-begin 
-	
-end;
-$$ languague plpgsql;
-
-create trigger tg_verificar_especialidad_en_uso
-before delete on public.especialidades 
-for each row execute procedure public.verificar_especialidad_en_uso
-
 
 
 

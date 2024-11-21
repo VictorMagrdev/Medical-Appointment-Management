@@ -109,3 +109,16 @@ exception
         raise notice 'Error: Ocurrió un error inesperado: %', sqlerrm;
 end;
 $$;
+
+
+
+
+
+
+
+
+
+
+
+
+
