@@ -54,5 +54,3 @@ begin
 	where m.especialidad_id = p_especialidad_id;
 end;
 $$ language plpgsql;
-
-
