@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Gestión Médica</title>
+    <script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js"></script>
+    <script src="https://unpkg.com/htmx.org@2.0.3"></script>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css">
+</head>
+
+<body class="bg-gray-100">
+
+<div class="flex flex-col min-h-screen">
+    <!-- Header -->
+    <header class="bg-blue-600 p-6 text-white">
+        <h1 class="text-3xl font-bold">Sistema de Gestión Médica</h1>
+    </header>
+
+    <!-- Main Content -->
+    <main class="flex-1 p-6">
+        <div x-data="{ tab: 'pacientes' }">
+            <!-- Tab Navigation -->
+            <div class="bg-gray-800 text-white rounded-lg shadow-md mb-6">
+                <ul class="flex space-x-4 px-6 py-4">
+                    <li>
+                        <button @click="tab = 'pacientes'" :class="{ 'bg-blue-500': tab === 'pacientes' }" class="px-4 py-2 rounded text-white hover:bg-blue-400 transition duration-200">
+                            Gestión de Pacientes
+                        </button>
+                    </li>
+                    <li>
+                        <button @click="tab = 'historia_clinica'" :class="{ 'bg-blue-500': tab === 'historia_clinica' }" class="px-4 py-2 rounded text-white hover:bg-blue-400 transition duration-200">
+                            Historia Clínica
+                        </button>
+                    </li>
+                    <li>
+                        <button @click="tab = 'medicamentos'" :class="{ 'bg-blue-500': tab === 'medicamentos' }" class="px-4 py-2 rounded text-white hover:bg-blue-400 transition duration-200">
+                            Medicamentos
+                        </button>
+                    </li>
+                    <li>
+                        <button @click="tab = 'seguros'" :class="{ 'bg-blue-500': tab === 'seguros' }" class="px-4 py-2 rounded text-white hover:bg-blue-400 transition duration-200">
+                            Seguros
+                        </button>
+                    </li>
+                    <li>
+                        <button @click="tab = 'medicos'" :class="{ 'bg-blue-500': tab === 'medicos' }" class="px-4 py-2 rounded text-white hover:bg-blue-400 transition duration-200">
+                            Médicos
+                        </button>
+                    </li>
+                    <li>
+                        <button @click="tab = 'auditorias'" :class="{ 'bg-blue-500': tab === 'auditorias' }" class="px-4 py-2 rounded text-white hover:bg-blue-400 transition duration-200">
+                            Auditorías
+                        </button>
+                    </li>
+                    <li>
+                        <button @click="tab = 'examenes'" :class="{ 'bg-blue-500': tab === 'examenes' }" class="px-4 py-2 rounded text-white hover:bg-blue-400 transition duration-200">
+                            Exámenes
+                        </button>
+                    </li>
+                </ul>
+            </div>
+
+            <!-- Tab Content -->
+            <div class="space-y-6">
+                <!-- Pacientes Tab -->
+                <div x-show="tab === 'pacientes'" x-transition>
+                    <h2 class="text-2xl font-semibold text-gray-800 mb-4">Gestión de Pacientes</h2>
+                    <div id="pacientes" hx-get="components/pacientes.html" hx-target="#pacientes" hx-trigger="load"></div>
+                </div>
+
+                <!-- Historia Clínica Tab -->
+                <div x-show="tab === 'historia_clinica'" x-transition>
+                    <h2 class="text-2xl font-semibold text-gray-800 mb-4">Historia Clínica</h2>
+                    <div id="historia-clinica" hx-get="components/historia-clinica.html" hx-target="#historia-clinica" hx-trigger="load"></div>
+                </div>
+
+                <!-- Medicamentos Tab -->
+                <div x-show="tab === 'medicamentos'" x-transition>
+                    <h2 class="text-2xl font-semibold text-gray-800 mb-4">Medicamentos</h2>
+                    <div id="medicamentos" hx-get="components/medicamentos.html" hx-target="#medicamentos" hx-trigger="load"></div>
+                </div>
+
+                <!-- Seguros Tab -->
+                <div x-show="tab === 'seguros'" x-transition>
+                    <h2 class="text-2xl font-semibold text-gray-800 mb-4">Seguros</h2>
+                    <div id="seguros" hx-get="components/seguros.html" hx-target="#seguros" hx-trigger="load"></div>
+                </div>
+
+                <!-- Médicos Tab -->
+                <div x-show="tab === 'medicos'" x-transition>
+                    <h2 class="text-2xl font-semibold text-gray-800 mb-4">Médicos</h2>
+                    <div id="medicos" hx-get="components/medicos.html" hx-target="#medicos" hx-trigger="load"></div>
+                </div>
+
+                <!-- Auditorías Tab -->
+                <div x-show="tab === 'auditorias'" x-transition>
+                    <h2 class="text-2xl font-semibold text-gray-800 mb-4">Auditorías</h2>
+                    <div id="auditorias" hx-get="components/auditorias.html" hx-target="#auditorias" hx-trigger="load"></div>
+                </div>
+
+                <!-- Exámenes Tab -->
+                <div x-show="tab === 'examenes'" x-transition>
+                    <h2 class="text-2xl font-semibold text-gray-800 mb-4">Exámenes</h2>
+                    <div id="examenes" hx-get="components/examenes.html" hx-target="#examenes" hx-trigger="load"></div>
+                </div>
+            </div>
+        </div>
+    </main>
+
+</div>
+
+</body>
+
+</html>

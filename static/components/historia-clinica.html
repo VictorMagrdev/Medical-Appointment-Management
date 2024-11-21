@@ -1,0 +1,25 @@
+<div class="p-6 bg-white rounded-lg shadow-lg">
+    <form hx-post="/api/v1/historias-clinicas" hx-trigger="submit" hx-target="#historias-clinicas-lista" class="space-y-6">
+        <h3 class="text-2xl font-semibold text-gray-800">Registrar Historia Clínica</h3>
+        <div class="space-y-4">
+            <div>
+                <label for="datos" class="block text-sm font-medium text-gray-600">Datos de la Historia Clínica</label>
+                <textarea id="datos" name="datos" class="w-full p-3 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500" required></textarea>
+            </div>
+            <div>
+                <label for="cita_id" class="block text-sm font-medium text-gray-600">ID de la Cita</label>
+                <input type="number" id="cita_id" name="cita_id" class="w-full p-3 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500" required>
+            </div>
+            <button type="submit" class="w-full bg-blue-500 text-white p-3 rounded-md shadow hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-500 transition duration-200">
+                Guardar Historia Clínica
+            </button>
+        </div>
+    </form>
+
+    <div id="historias-clinicas-lista" class="mt-8">
+        <h3 class="text-2xl font-semibold text-gray-800">Historias Clínicas Registradas</h3>
+        <ul class="space-y-4 mt-4">
+            <!-- Aquí se cargarán las historias clínicas -->
+        </ul>
+    </div>
+</div>

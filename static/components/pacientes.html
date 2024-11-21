@@ -1,0 +1,82 @@
+<div x-data="{ nombre: '', identificacion: '', fecha_nacimiento: '', sexo: '', direccion: '', email: '', celular: '', seguro_id: '' }">
+  <form @submit.prevent="htmx.post('/api/v1/paciente', {
+            nombre: nombre,
+            identificacion: identificacion,
+            fecha_nacimiento: fecha_nacimiento,
+            sexo: sexo,
+            direccion: direccion,
+            email: email,
+            celular: celular,
+            seguro_id: seguro_id
+        })" class="bg-white p-4 rounded shadow-md mb-6">
+    <h2 class="text-xl font-semibold mb-4">Nuevo Paciente</h2>
+
+    <!-- Form fields for creating new patient -->
+    <div class="mb-4">
+      <label class="block">Nombre:
+        <input type="text" x-model="nombre" class="w-full p-2 border rounded" required>
+      </label>
+    </div>
+
+    <div class="mb-4">
+      <label class="block">Identificación:
+        <input type="text" x-model="identificacion" class="w-full p-2 border rounded" required>
+      </label>
+    </div>
+
+    <div class="mb-4">
+      <label class="block">Fecha de Nacimiento:
+        <input type="date" x-model="fecha_nacimiento" class="w-full p-2 border rounded" required>
+      </label>
+    </div>
+
+    <div class="mb-4">
+      <label class="block">Sexo:
+        <select x-model="sexo" class="w-full p-2 border rounded" required>
+          <option value="">Seleccione...</option>
+          <option value="M">Masculino</option>
+          <option value="F">Femenino</option>
+        </select>
+      </label>
+    </div>
+
+    <div class="mb-4">
+      <label class="block">Dirección:
+        <input type="text" x-model="direccion" class="w-full p-2 border rounded" required>
+      </label>
+    </div>
+
+    <div class="mb-4">
+      <label class="block">Email:
+        <input type="email" x-model="email" class="w-full p-2 border rounded" required>
+      </label>
+    </div>
+
+    <div class="mb-4">
+      <label class="block">Celular:
+        <input type="text" x-model="celular" class="w-full p-2 border rounded" required>
+      </label>
+    </div>
+
+    <div class="mb-4">
+      <label class="block">ID de Seguro:
+        <input type="number" x-model="seguro_id" class="w-full p-2 border rounded">
+      </label>
+    </div>
+
+    <button type="submit" class="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600">Crear Paciente</button>
+  </form>
+
+  <button
+          hx-get="/api/v1/pacientes"
+          hx-target="#pacientes-lista"
+          hx-trigger="click"
+          class="bg-green-500 text-white px-4 py-2 rounded mb-4"
+  >
+    Cargar Pacientes
+  </button>
+
+  <div id="pacientes-lista" class="space-y-4">
+    <!-- Aquí se cargarán los pacientes -->
+  </div>
+</div>

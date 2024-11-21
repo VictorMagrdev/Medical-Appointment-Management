@@ -1,0 +1,37 @@
+<div class="p-6 bg-white rounded-lg shadow-lg">
+    <form hx-post="/api/v1/seguros" hx-trigger="submit" hx-target="#seguros-lista" class="space-y-6">
+        <h3 class="text-2xl font-semibold text-gray-800">Registrar Seguro Médico</h3>
+        <div class="space-y-4">
+            <div>
+                <label for="nombre" class="block text-sm font-medium text-gray-600">Nombre del Seguro</label>
+                <input type="text" id="nombre" name="nombre" class="w-full p-3 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500" required>
+            </div>
+            <div>
+                <label for="tipo_seguro" class="block text-sm font-medium text-gray-600">Tipo de Seguro</label>
+                <input type="text" id="tipo_seguro" name="tipo_seguro" class="w-full p-3 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500" required>
+            </div>
+            <div>
+                <label for="fecha_inicio" class="block text-sm font-medium text-gray-600">Fecha de Inicio</label>
+                <input type="date" id="fecha_inicio" name="fecha_inicio" class="w-full p-3 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500" required>
+            </div>
+            <div>
+                <label for="fecha_final" class="block text-sm font-medium text-gray-600">Fecha Final</label>
+                <input type="date" id="fecha_final" name="fecha_final" class="w-full p-3 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500" required>
+            </div>
+            <div>
+                <label for="celular_contacto" class="block text-sm font-medium text-gray-600">Celular de Contacto</label>
+                <input type="text" id="celular_contacto" name="celular_contacto" class="w-full p-3 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500" required>
+            </div>
+            <button type="submit" class="w-full bg-blue-500 text-white p-3 rounded-md shadow hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-500 transition duration-200">
+                Guardar Seguro
+            </button>
+        </div>
+    </form>
+
+    <div id="seguros-lista" class="mt-8">
+        <h3 class="text-2xl font-semibold text-gray-800">Seguros Registrados</h3>
+        <ul class="space-y-4 mt-4">
+            <!-- Aquí se cargarán los seguros -->
+        </ul>
+    </div>
+</div>

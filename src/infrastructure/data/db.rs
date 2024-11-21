@@ -19,8 +19,11 @@ impl AppState {
         self.db_mongo.clone()
     }
 }
+
 async fn connect_pg_db() -> Result<PgPool> {
-    let database_url = "postgres://postgres:EllenJoe@localhost:5432/doctorya";
+    //postgres://postgres:postgres@localhost:5432/doctorya
+    //postgres://postgres:EllenJoe@localhost:5432/doctorya
+    let database_url = "postgres://postgres:postgres@localhost:5432/doctorya";
 
     let db = match PgPoolOptions::new()
         .max_connections(5)
@@ -53,6 +56,7 @@ pub async fn connect_db_mongo() -> Result<Client> {
 
     Ok(client)
 }
+
 pub async fn connect_db() -> Result<AppState, sqlx::Error> {
     let db_pg = connect_pg_db().await?;
     let db_client = connect_db_mongo().await?;

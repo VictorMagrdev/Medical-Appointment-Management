@@ -1,0 +1,49 @@
+<div class="p-6 bg-white rounded-lg shadow-lg">
+  <form hx-post="/api/v1/medicamento" hx-trigger="submit" hx-target="#medicamentos-lista" class="space-y-6">
+    <h3 class="text-2xl font-semibold text-gray-800">Medicamentos</h3>
+    <div class="space-y-4">
+      <div>
+        <label for="nombre" class="block text-sm font-medium text-gray-600">Nombre del Medicamento</label>
+        <input type="text" id="nombre" name="nombre" class="w-full p-3 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500" required>
+      </div>
+      <div>
+        <label for="principio_activo" class="block text-sm font-medium text-gray-600">Principio Activo</label>
+        <input type="text" id="principio_activo" name="principio_activo" class="w-full p-3 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500" required>
+      </div>
+      <div>
+        <label for="forma_farmaceutica" class="block text-sm font-medium text-gray-600">Forma Farmacéutica</label>
+        <input type="text" id="forma_farmaceutica" name="forma_farmaceutica" class="w-full p-3 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500" required>
+      </div>
+      <div>
+        <label for="dosis" class="block text-sm font-medium text-gray-600">Dosis</label>
+        <input type="text" id="dosis" name="dosis" class="w-full p-3 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500" required>
+      </div>
+      <div>
+        <label for="indicaciones_uso" class="block text-sm font-medium text-gray-600">Indicaciones de Uso</label>
+        <input type="text" id="indicaciones_uso" name="indicaciones_uso" class="w-full p-3 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500" required>
+      </div>
+      <div>
+        <label for="duracion_tratamiento" class="block text-sm font-medium text-gray-600">Duración del Tratamiento</label>
+        <input type="text" id="duracion_tratamiento" name="duracion_tratamiento" class="w-full p-3 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500" required>
+      </div>
+      <div>
+        <label for="estado" class="block text-sm font-medium text-gray-600">Estado</label>
+        <input type="text" id="estado" name="estado" class="w-full p-3 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500" required>
+      </div>
+      <div>
+        <label for="historia_clinica_id" class="block text-sm font-medium text-gray-600">ID Historia Clínica</label>
+        <input type="number" id="historia_clinica_id" name="historia_clinica_id" class="w-full p-3 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500" required>
+      </div>
+      <button type="submit" class="w-full bg-blue-500 text-white p-3 rounded-md shadow hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-500 transition duration-200">
+        Guardar Medicamento
+      </button>
+    </div>
+  </form>
+
+  <div id="medicamentos-lista" class="mt-8">
+    <h3 class="text-2xl font-semibold text-gray-800">Medicamentos Registrados</h3>
+    <ul class="space-y-4 mt-4">
+      <!-- Aquí se cargarán los medicamentos -->
+    </ul>
+  </div>
+</div>

@@ -1,0 +1,41 @@
+<div class="p-6 bg-white rounded-lg shadow-md">
+  <form hx-post="/api/v1/medicos" hx-trigger="submit" hx-target="#medicos-lista" class="space-y-6">
+    <h3 class="text-2xl font-semibold text-gray-800">Registrar Médico</h3>
+    <div class="space-y-4">
+      <div>
+        <label for="nombre" class="block text-sm font-medium text-gray-600">Nombre</label>
+        <input type="text" id="nombre" name="nombre" class="w-full p-3 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500" required>
+      </div>
+      <div>
+        <label for="identificacion" class="block text-sm font-medium text-gray-600">Identificación</label>
+        <input type="text" id="identificacion" name="identificacion" class="w-full p-3 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500" required>
+      </div>
+      <div>
+        <label for="registro_medico" class="block text-sm font-medium text-gray-600">Registro Médico</label>
+        <input type="text" id="registro_medico" name="registro_medico" class="w-full p-3 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500" required>
+      </div>
+      <div>
+        <label for="especialidad_id" class="block text-sm font-medium text-gray-600">Especialidad ID</label>
+        <input type="number" id="especialidad_id" name="especialidad_id" class="w-full p-3 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500" required>
+      </div>
+      <div>
+        <label for="email" class="block text-sm font-medium text-gray-600">Email</label>
+        <input type="email" id="email" name="email" class="w-full p-3 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500" required>
+      </div>
+      <div>
+        <label for="celular" class="block text-sm font-medium text-gray-600">Celular</label>
+        <input type="text" id="celular" name="celular" class="w-full p-3 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500" required>
+      </div>
+      <button type="submit" class="w-full bg-blue-500 text-white p-3 rounded-md shadow hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-500 transition duration-200">
+        Guardar Médico
+      </button>
+    </div>
+  </form>
+
+  <div id="medicos-lista" class="mt-8">
+    <h3 class="text-2xl font-semibold text-gray-800">Médicos Registrados</h3>
+    <ul class="space-y-4 mt-4">
+      <!-- Aquí se cargarán los médicos -->
+    </ul>
+  </div>
+</div>

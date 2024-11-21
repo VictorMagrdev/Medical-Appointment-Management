@@ -10,3 +10,4 @@ pub mod paciente;
 pub mod remisiones_medicas;
 pub mod resultados_examenes;
 pub mod seguro_medico;
+pub mod auditoria;
