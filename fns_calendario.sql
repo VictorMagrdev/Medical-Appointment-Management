@@ -54,3 +54,27 @@ begin
 	where m.especialidad_id = p_especialidad_id;
 end;
 $$ language plpgsql;
+
+
+create or replace function public.obtener_cita_en_calendario(
+	p_fecha date,
+    p_hora time,
+    p_medico_id int
+) 
+return table(
+    fecha date,
+    hora time,
+    motivo varchar,
+    estado estado_cita,
+    paciente_id int,
+    medico_id int
+) as $$
+begin
+    return query
+    select 
+        c.fecha, c.hora, c.motivo,c.estado, c.paciente_id, c.medico_id 
+	from public.citas c where c.fecha = p_fecha
+      and c.hora = p_hora
+      and c.medico_id = p_medico_id;
+end;
+$$ language plpgsql;
