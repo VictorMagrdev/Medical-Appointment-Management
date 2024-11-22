@@ -76,5 +76,6 @@ begin
 	from public.citas c where c.fecha = p_fecha
       and c.hora = p_hora
       and c.medico_id = p_medico_id;
+	limit 1;
 end;
 $$ language plpgsql;
