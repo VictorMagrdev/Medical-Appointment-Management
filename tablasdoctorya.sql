@@ -59,7 +59,7 @@ create table public.citas (
     motivo varchar(255),
     estado estado_cita not null,
     paciente_id int references public.pacientes(id),
-    medico_id int references public.medicos(id),
+    medico_id int references public.medicos(id)
 );
 
 create table public.historias_clinicas (
