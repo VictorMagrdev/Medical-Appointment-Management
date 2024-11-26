@@ -73,7 +73,7 @@ begin
             ))
     into v_contenido_informe
     from public.pacientes p
-    join public.especialidades e citas c on c.paciente_id = p.id
+    join public.citas c on c.paciente_id = p.id
     join public.historias_clinicas hc on hc.cita_id = c.id
     join public.medicamentos m on m.historia_clinica_id = hc.id
     where m.estado = 'entregado'
