@@ -14,8 +14,8 @@ begin
         'estado', c.estado,
         'paciente', p.nombre
     ))
-    into v_contenido_informe from citas c
-    join pacientes p on c.paciente_id = p.id
+    into v_contenido_informe from public.citas c
+    join public.pacientes p on c.paciente_id = p.id
     where c.medico_id = p_medico_id
     and extract(month from c.fecha) = p_mes
     and extract(year from c.fecha) = p_anio;
@@ -41,13 +41,13 @@ begin
                 	)
             	)
         	))
-    into v_contenido_informe from citas c
-    join pacientes p on c.paciente_id = p.id
-    join medicos m on c.medico_id = m.id
+    into v_contenido_informe from public.citas c
+    join public.pacientes p on c.paciente_id = p.id
+    join public.medicos m on c.medico_id = m.id
     where c.estado = 'programada'
     group by p.id, p.nombre;
 
-    insert into informes(fecha, tipo_informe, contenido)
+    insert into public.informes(fecha, tipo_informe, contenido)
     values (current_date, 'informe de citas', v_contenido_informe);
 end;
 $$ language plpgsql;
@@ -70,14 +70,14 @@ begin
                 )
             ))
     into v_contenido_informe
-    from pacientes p
-    join citas c on c.paciente_id = p.id
-    join historias_clinicas hc on hc.cita_id = c.id
-    join medicamentos m on m.historia_clinica_id = hc.id
+    from public.pacientes p
+    join public.especialidades e citas c on c.paciente_id = p.id
+    join public.historias_clinicas hc on hc.cita_id = c.id
+    join public.medicamentos m on m.historia_clinica_id = hc.id
     where m.estado = 'entregado'
     group by p.id, p.nombre;
 
-    insert into informes (fecha, tipo_informe, contenido)
+    insert into public.informes (fecha, tipo_informe, contenido)
     values (current_date, 'informe de citas', medicamentos_informe);
 end;
 $$ language plpgsql;
@@ -99,14 +99,14 @@ begin
                 )
             ))
     into v_contenido_informe
-    from pacientes p
-    join citas c on c.paciente_id = p.id
-    join historias_clinicas hc on hc.cita_id = c.id
-    join examenes e on e.historia_clinica_id = hc.id
+    from public.pacientes p
+    join public.citas c on c.paciente_id = p.id
+    join public.historias_clinicas hc on hc.cita_id = c.id
+    join public.examenes e on e.historia_clinica_id = hc.id
     where e.estado = 'pendiente'
     group by p.id, p.nombre;
 
-    insert into informes (fecha, tipo_informe, contenido)
+    insert into public.informes (fecha, tipo_informe, contenido)
     values (current_date, 'examenes', v_contenido_informe);
 end;
 $$ language plpgsql;
