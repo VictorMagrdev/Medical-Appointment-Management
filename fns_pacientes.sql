@@ -5,7 +5,7 @@ create or replace procedure public.crear_paciente(
     p_nombre varchar,
     p_identificacion varchar,
     p_fecha_nacimiento date,
-    p_sexo public.sexo,
+    p_sexo varchar,
     p_direccion varchar,
     p_email varchar,
     p_celular varchar,
@@ -16,7 +16,7 @@ as $$
 begin	
 
     insert into public.pacientes (nombre, identificacion, fecha_nacimiento, sexo, direccion, email, celular, seguro_id)
-    values (p_nombre, p_identificacion, p_fecha_nacimiento, p_sexo, p_direccion, p_email, p_celular, p_seguro_id);
+    values (p_nombre, p_identificacion, p_fecha_nacimiento, p_sexo::public.sexo, p_direccion, p_email, p_celular, p_seguro_id);
 
 exception
 	when unique_violation then
@@ -64,7 +64,7 @@ create or replace procedure public.modificar_paciente(
     p_id int, p_nombre varchar,
     p_identificacion varchar,
     p_fecha_nacimiento date,
-    p_sexo public.sexo,
+    p_sexo varchar,
     p_direccion varchar,
     p_email varchar,
     p_celular varchar,
@@ -78,7 +78,7 @@ begin
     set nombre = p_nombre,
         identificacion = p_identificacion,
         fecha_nacimiento = p_fecha_nacimiento,
-        sexo = p_sexo,
+        sexo = p_sexo::public.sexo,
         direccion = p_direccion,
         email = p_email,
         celular = p_celular,

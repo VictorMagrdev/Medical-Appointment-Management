@@ -6,14 +6,14 @@ create or replace procedure public.crear_examen(
     p_costo decimal,
     p_cubre_seguro boolean,
     p_fecha_realizacion date,
-    p_estado public.estado_examen,
+    p_estado varchar,
     p_historia_clinica_id int
 )
 language plpgsql
 as $$
 begin
     insert into public.examenes (nombre, costo, cubre_seguro, fecha_realizacion, estado, historia_clinica_id)
-    values (p_nombre, p_costo, p_cubre_seguro, p_fecha_realizacion, p_estado, p_historia_clinica_id);
+    values (p_nombre, p_costo, p_cubre_seguro, p_fecha_realizacion, p_estado::public.estado_examen, p_historia_clinica_id);
 
 exception
     when foreign_key_violation then
@@ -52,7 +52,7 @@ create or replace procedure public.modificar_examen(
     p_costo decimal,
     p_cubre_seguro boolean,
     p_fecha_realizacion date,
-    p_estado public.estado_examen,
+    p_estado varchar,
     p_historia_clinica_id int
 )
 language plpgsql
@@ -63,7 +63,7 @@ begin
         costo = p_costo,
         cubre_seguro = p_cubre_seguro,
         fecha_realizacion = p_fecha_realizacion,
-        estado = p_estado,
+        estado = p_estado::public.estado_examen,
         historia_clinica_id = p_historia_clinica_id
     where id = p_id;
 

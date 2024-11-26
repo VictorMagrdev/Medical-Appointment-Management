@@ -37,7 +37,6 @@ exception
 		raise notice 'Error: Ocurrio un error inesperado: %', sqlerrm;
 end;
 $$;
-call public.crear_seguro_medico('a','publico', '2024-11-3', '2024-11-15', 'activo', '313223234');
 
 
 create or replace procedure public.eliminar_seguro_medico(p_id bigint)
@@ -67,9 +66,10 @@ $$;
 create or replace procedure public.modificar_seguro_medico(
     p_id bigint,
     p_nombre varchar,
-    p_tipo public.tipo_seguro,
+    p_tipo varchar,
     p_fecha_inicio date,
     p_fecha_final date,
+    p_estado varchar,
     p_celular_contacto varchar
 )
 language plpgsql
@@ -89,9 +89,10 @@ begin
 
     update public.seguro_medico
     set nombre = p_nombre,
-        tipo = p_tipo,
+        tipo = p_tipo::public.tipo_seguro,
         fecha_inicio = p_fecha_inicio,
         fecha_final = p_fecha_final,
+		estado = p_estado::public.estado_seguro,
         celular_contacto = p_celular_contacto
     where id = p_id;
 
@@ -121,6 +122,7 @@ returns table(
     tipo public.tipo_seguro,
     fecha_inicio date,
     fecha_final date,
+    estado public.estado_seguro,
     celular_contacto varchar
 )
 language plpgsql
@@ -135,4 +137,5 @@ exception
 		raise notice 'Error: Ocurrio un error inesperado: %', sqlerrm;
 end;
 $$;
+
 

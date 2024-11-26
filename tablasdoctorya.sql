@@ -76,7 +76,7 @@ create table public.medicamentos (
     dosis varchar(50) not null,
     indicaciones_uso text not null,
     duracion_tratamiento varchar(50),
-    estado estado_medicamento,
+    estado public.estado_medicamento,
     historia_clinica_id int references public.historias_clinicas(id)
 );
 

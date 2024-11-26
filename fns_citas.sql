@@ -12,7 +12,7 @@ as $$
 begin	
 
     insert into public.citas (fecha, hora, motivo, estado, paciente_id, medico_id)
-    values (p_fehcha, p_hora, p_motivo, 'programada' ,p_paciente_id, p_medico_id);
+    values (p_fehcha, p_hora, p_motivo, 'programada'::public.estado_cita ,p_paciente_id, p_medico_id);
 
 exception
 	when unique_violation then
@@ -36,13 +36,13 @@ $$;
 
 create or replace procedure public.cambiar_estado_cita(
 	p_id int,
-	p_estado estado_cita
+	p_estado varchar
 )
 language plpgsql
 as $$
 begin
 	update public.citas
-	set estado = p_estado
+	set estado = p_estado:public.estado_cita
 	where id = p_id;
 	
 	if not found then
