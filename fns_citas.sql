@@ -5,16 +5,15 @@ create or replace procedure public.crear_cita(
     p_fecha date,
     p_hora time,
     p_motivo varchar,
-    estado estado_cita,
-    paciente_id int,
-    medico_id int
+    p_paciente_id int,
+    p_medico_id int
 )
 language plpgsql
 as $$
 begin	
 
-    insert into public.citas (fecha, hora, motivo, 'programada', paciente_id, medico_id)
-    values (p_nombre);
+    insert into public.citas (fecha, hora, motivo, estado, paciente_id, medico_id)
+    values (p_fehcha, p_hora, p_motivo, 'programada' ,p_paciente_id, p_medico_id);
 
 exception
 	when unique_violation then
