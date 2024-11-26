@@ -65,14 +65,14 @@ returns table(
     fecha date,
     hora time,
     motivo varchar,
-    estado estado_cita,
+    estado varchar,
     paciente_id int,
     medico_id int
 ) as $$
 begin
     return query
     select 
-        c.fecha, c.hora, c.motivo,c.estado, c.paciente_id, c.medico_id 
+        c.fecha, c.hora, c.motivo,c.estado::varchar, c.paciente_id, c.medico_id 
 	from public.citas c where c.fecha = p_fecha
       and c.hora = p_hora
       and c.medico_id = p_medico_id

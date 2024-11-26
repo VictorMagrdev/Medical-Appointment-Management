@@ -119,7 +119,7 @@ returns table(
     nombre varchar,
     identificacion varchar,
     fecha_nacimiento date,
-    sexo public.sexo,
+    sexo varchar,
     direccion varchar,
     email varchar,
     celular varchar,
@@ -132,7 +132,7 @@ begin
         raise exception 'No se encontraron registros en la tabla de pacientes.';
     end if;	
 
-    return query select * from public.pacientes;
+    return query select id, nombre, identificacion, fecha_nacimiento, sexo::varchar, direccion, email, celular, seguro_id from public.pacientes;
 
 exception
 	when others then

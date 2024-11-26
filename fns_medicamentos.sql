@@ -99,11 +99,11 @@ returns table(
     id int,
     nombre varchar,
     principio_activo varchar,
-    forma_farmaceutica forma_farmaceutica,
+    forma_farmaceutica varchar,
     dosis varchar,
     indicaciones_uso text,
     duracion_tratamiento varchar,
-    estado estado_medicamento,
+    estado varchar,
     historia_clinica_id int
 )
 language plpgsql
@@ -113,7 +113,8 @@ begin
         raise exception 'No se encontraron registros en la tabla de medicamentos.';
     end if;
 
-    return query select * from public.medicamentos;
+    return query select id, nombre, principio_activo, forma_farmaceutica::varchar, dosis, indicaciones_uso,
+					 duracion_tratamiento, estado::varchar, historia_clinica_id from public.medicamentos;
 
 exception
     when others then
