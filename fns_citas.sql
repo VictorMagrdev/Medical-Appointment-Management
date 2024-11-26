@@ -42,7 +42,7 @@ language plpgsql
 as $$
 begin
 	update public.citas
-	set estado = p_estado:public.estado_cita
+	set estado = p_estado::public.estado_cita
 	where id = p_id;
 	
 	if not found then
@@ -88,7 +88,7 @@ begin
 	values(new.fecha, new.hora, new.medico_id);
 	return new;
 exception
-	when other then
+	when others then
 		raise notice  'Error al generar cita en el calendario: %', SQLERRM;
 		return null;
 end;
