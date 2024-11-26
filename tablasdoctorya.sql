@@ -31,7 +31,7 @@ create table public.pacientes (
     direccion varchar(255),
     email varchar(255) not null,
     celular varchar(15) not null,
-    seguro_id int references seguro_medico(id) on delete cascade
+    seguro_id int references public.seguro_medico(id) on delete cascade
 );
 
 create table public.medicos (
@@ -42,14 +42,14 @@ create table public.medicos (
     especialidad_id integer,
     email varchar(255) not null,
     celular varchar(15) not null,
-    foreign key (especialidad_id) references especialidades(id) on delete cascade
+    foreign key (especialidad_id) references public.especialidades(id) on delete cascade
 );
 
 create table public.calendario (
     id serial primary key,
 	fecha date not null,
     hora time not null,
-    medico_id int references medicos(id)
+    medico_id int references public.medicos(id)
 );
 
 create table public.citas (
@@ -65,7 +65,7 @@ create table public.citas (
 create table public.historias_clinicas (
     id bigint primary key default nextval('public.historias_clinicas_id_seq'),
 	datos jsonb not null, /*  fecha date not null, sintomas text, diagnostico text, tratamiento text, observaciones text,*/
-    cita_id int references citas(id)
+    cita_id int references public.citas(id)
 );
 
 create table public.medicamentos (
@@ -77,7 +77,7 @@ create table public.medicamentos (
     indicaciones_uso text not null,
     duracion_tratamiento varchar(50),
     estado estado_medicamento,
-    historia_clinica_id int references historias_clinicas(id)
+    historia_clinica_id int references public.historias_clinicas(id)
 );
 
 create table public.examenes (
@@ -87,15 +87,15 @@ create table public.examenes (
     cubre_seguro boolean,
     fecha_realizacion date not null,
     estado estado_examen,
-    historia_clinica_id int references historias_clinicas(id)
+    historia_clinica_id int references public.historias_clinicas(id)
 );
 
 create table public.resultados_examenes (
     id integer primary key default nextval('public.resultados_examenes_id_seq'),
     diagnostico text not null,
     posible_tratamiento text not null,
-    examen_id int references examenes(id),
-    medico_id int references medicos(id)
+    examen_id int references public.examenes(id),
+    medico_id int references public.medicos(id)
 );
 
 create table public.remisiones_medicas (
@@ -103,7 +103,7 @@ create table public.remisiones_medicas (
     fecha date not null,
     motivo_remision xml,
     medico_id int references medicos(id),
-    historia_clinica_id int references historias_clinicas(id)
+    historia_clinica_id int references public.historias_clinicas(id)
 );
 
 create table public.informes (
