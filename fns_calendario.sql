@@ -61,7 +61,7 @@ create or replace function public.obtener_cita_en_calendario(
     p_hora time,
     p_medico_id int
 )
-return table(
+returns table(
     fecha date,
     hora time,
     motivo varchar,
