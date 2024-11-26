@@ -119,10 +119,10 @@ create or replace function public.obtener_seguros_medicos()
 returns table(
     id bigint,
     nombre varchar,
-    tipo public.tipo_seguro,
+    tipo varchar,
     fecha_inicio date,
     fecha_final date,
-    estado public.estado_seguro,
+    estado varchar,
     celular_contacto varchar
 )
 language plpgsql
@@ -131,7 +131,7 @@ begin
 	if not exists (select 1 from public.seguro_medico) then
         raise exception 'No se encontraron registros en la tabla de pacientes.';
     end if;	
-    return query select * from public.seguro_medico;
+    return query select id, nombre, tipo::varchar, fecha_inicio, fecha_final, estado::varchar, celular_contacto from public.seguro_medico;
 exception
 	when others then
 		raise notice 'Error: Ocurrio un error inesperado: %', sqlerrm;
