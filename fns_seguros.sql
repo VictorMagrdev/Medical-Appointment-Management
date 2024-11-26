@@ -3,7 +3,7 @@
 
 create or replace procedure public.crear_seguro_medico(
     p_nombre varchar,
-    p_tipo tipo_seguro,
+    p_tipo public.tipo_seguro,
     p_fecha_inicio date,
     p_fecha_final date,
     p_celular_contacto varchar
@@ -61,7 +61,7 @@ $$;
 create or replace procedure public.modificar_seguro_medico(
     p_id bigint,
     p_nombre varchar,
-    p_tipo tipo_seguro,
+    p_tipo public.tipo_seguro,
     p_fecha_inicio date,
     p_fecha_final date,
     p_celular_contacto varchar
@@ -112,7 +112,7 @@ create or replace function public.obtener_seguros_medicos()
 returns table(
     id bigint,
     nombre varchar,
-    tipo tipo_seguro,
+    tipo public.tipo_seguro,
     fecha_inicio date,
     fecha_final date,
     celular_contacto varchar

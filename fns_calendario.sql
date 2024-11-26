@@ -60,7 +60,7 @@ create or replace function public.obtener_cita_en_calendario(
 	p_fecha date,
     p_hora time,
     p_medico_id int
-) 
+)
 return table(
     fecha date,
     hora time,

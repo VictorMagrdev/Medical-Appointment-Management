@@ -15,7 +15,7 @@ create table public.especialidades(
 create table public.seguro_medico (
     id bigint primary key default nextval('public.seguro_medico_id_seq'),
     nombre varchar(255) not null,
-    tipo tipo_seguro,
+    tipo public.tipo_seguro,
     fecha_inicio date not null,
     fecha_final date not null,
     estado estado_seguro,
@@ -27,7 +27,7 @@ create table public.pacientes (
     nombre varchar(255) not null,
     identificacion varchar(50) unique not null,
     fecha_nacimiento date not null,
-    sexo sexo,
+    sexo public.sexo,
     direccion varchar(255),
     email varchar(255) not null,
     celular varchar(15) not null,
@@ -57,7 +57,7 @@ create table public.citas (
     fecha date not null,
     hora time not null,
     motivo varchar(255),
-    estado estado_cita not null,
+    estado public.estado_cita not null,
     paciente_id int references public.pacientes(id),
     medico_id int references public.medicos(id)
 );
@@ -72,7 +72,7 @@ create table public.medicamentos (
     id integer primary key default nextval('public.medicamentos_id_seq'),
     nombre varchar(255) not null,
     principio_activo varchar(255),
-    forma_farmaceutica forma_farmaceutica not null,
+    forma_farmaceutica public.forma_farmaceutica not null,
     dosis varchar(50) not null,
     indicaciones_uso text not null,
     duracion_tratamiento varchar(50),
@@ -86,7 +86,7 @@ create table public.examenes (
     costo decimal(10, 2),
     cubre_seguro boolean,
     fecha_realizacion date not null,
-    estado estado_examen,
+    estado public.estado_examen,
     historia_clinica_id int references public.historias_clinicas(id)
 );
 
@@ -109,7 +109,7 @@ create table public.remisiones_medicas (
 create table public.informes (
     id integer primary key default nextval('public.informes_id_seq'),
     fecha date not null,
-    tipo_informe tipo_informe,
+    tipo_informe public.tipo_informe,
     contenido jsonb
 );
 

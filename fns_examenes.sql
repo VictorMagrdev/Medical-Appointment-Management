@@ -6,7 +6,7 @@ create or replace procedure public.crear_examen(
     p_costo decimal,
     p_cubre_seguro boolean,
     p_fecha_realizacion date,
-    p_estado estado_examen,
+    p_estado public.estado_examen,
     p_historia_clinica_id int
 )
 language plpgsql
@@ -52,7 +52,7 @@ create or replace procedure public.modificar_examen(
     p_costo decimal,
     p_cubre_seguro boolean,
     p_fecha_realizacion date,
-    p_estado estado_examen,
+    p_estado public.estado_examen,
     p_historia_clinica_id int
 )
 language plpgsql
@@ -92,7 +92,7 @@ returns table(
     costo decimal,
     cubre_seguro boolean,
     fecha_realizacion date,
-    estado estado_examen,
+    estado public.estado_examen,
     historia_clinica_id int
 )
 language plpgsql

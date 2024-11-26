@@ -3,7 +3,7 @@ create or replace procedure public.generar_informe_citas_mes_medico(
 	p_medico_id int,
 	p_mes int,
 	p_anio int
-)
+) as $$
 declare 
 	v_contenido_informe jsonb;
 begin
@@ -28,6 +28,7 @@ $$ language plpgsql;
 
 
 create or replace procedure public.generar_informe_citas_pendientes_pacientes()
+as $$
 declare 
 	v_contenido_informe jsonb;
 begin
@@ -54,6 +55,7 @@ $$ language plpgsql;
 
 
 create or replace procedure public.generar_informe_medicamentos_entregados()
+as $$
 declare 
 	v_contenido_informe jsonb;
 begin
@@ -84,6 +86,7 @@ $$ language plpgsql;
 
 
 create or replace procedure public.generar_informe_examenes_pendientes_pacientes()
+as $$
 declare 
 	v_contenido_informe jsonb;
 begin
