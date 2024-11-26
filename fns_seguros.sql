@@ -3,9 +3,10 @@
 
 create or replace procedure public.crear_seguro_medico(
     p_nombre varchar,
-    p_tipo public.tipo_seguro,
+    p_tipo varchar,
     p_fecha_inicio date,
     p_fecha_final date,
+    p_estado varchar,
     p_celular_contacto varchar
 )
 language plpgsql
@@ -15,10 +16,14 @@ begin
 		raise exception 'La fecha inicial debe ser menor a la final';
 	end if;
 
-    insert into public.seguro_medico (nombre, tipo, fecha_inicio, fecha_final, celular_contacto)
-    values (p_nombre, p_tipo, p_fecha_inicio, p_fecha_final, p_celular_contacto);
+    insert into public.seguro_medico(nombre, tipo, fecha_inicio, fecha_final, estado, celular_contacto)
+    values (p_nombre, p_tipo::public.tipo_seguro, p_fecha_inicio, p_fecha_final, p_estado::public.estado_seguro, p_celular_contacto);
 exception
 	
+	when unique_violation then
+		rollback;
+		raise notice 'El nombre ya existe en el sistema.';	
+
 	when sqlstate '22008' then
         rollback;
         raise notice 'La fecha de nacimiento está fuera de un rango permitido.';
@@ -32,6 +37,7 @@ exception
 		raise notice 'Error: Ocurrio un error inesperado: %', sqlerrm;
 end;
 $$;
+call public.crear_seguro_medico('a','publico', '2024-11-3', '2024-11-15', 'activo', '313223234');
 
 
 create or replace procedure public.eliminar_seguro_medico(p_id bigint)

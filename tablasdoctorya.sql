@@ -14,11 +14,11 @@ create table public.especialidades(
 
 create table public.seguro_medico (
     id bigint primary key default nextval('public.seguro_medico_id_seq'),
-    nombre varchar(255) not null,
+    nombre varchar(255) not null unique,
     tipo public.tipo_seguro,
     fecha_inicio date not null,
     fecha_final date not null,
-    estado estado_seguro,
+    estado public.estado_seguro,
     celular_contacto varchar(15) not null
 );
 
