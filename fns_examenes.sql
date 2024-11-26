@@ -92,7 +92,7 @@ returns table(
     costo decimal,
     cubre_seguro boolean,
     fecha_realizacion date,
-    estado public.estado_examen,
+    estado varchar,
     historia_clinica_id int
 )
 language plpgsql
@@ -102,7 +102,7 @@ begin
         raise exception 'No se encontraron registros en la tabla de exámenes.';
     end if;
 
-    return query select * from public.examenes;
+    return query select id, nombre, costo, cubre_seguro, fecha_realizacion, estado::varchar, historia_clinica_id from public.examenes;
 
 exception
     when others then

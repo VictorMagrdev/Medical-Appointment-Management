@@ -41,7 +41,7 @@ exception
 	
 end;
 $$;
-
+ call public.crear_paciente('a', 'asas', '2003-11-13', 'masculino', 'asas', 'asasas', '21331', 1090);
 
 create or replace procedure public.eliminar_paciente(p_id int)
 language plpgsql
