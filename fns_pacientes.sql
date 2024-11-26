@@ -1,6 +1,6 @@
 --public.pacientes
 
-// CREAR PACIENTE
+
 create or replace procedure public.crear_paciente(
     p_nombre varchar,
     p_identificacion varchar,
@@ -27,7 +27,7 @@ exception
 		rollback;
 		raise notice 'El seguro asociado no existe.';
 
-	when date_out_of_range then
+	when sqlstate '22008' then
         rollback;
         raise notice 'La fecha de nacimiento está fuera de un rango permitido.';
 	
@@ -42,7 +42,7 @@ exception
 end;
 $$;
 
-// ELIMINAR PACIENTE
+
 create or replace procedure public.eliminar_paciente(p_id int)
 language plpgsql
 as $$
@@ -60,7 +60,6 @@ end;
 $$;
 
 
-// MODIFICAR PACIENTE 
 create or replace procedure public.modificar_paciente(
     p_id int, p_nombre varchar,
     p_identificacion varchar,
@@ -99,7 +98,7 @@ exception
 		rollback;
 		raise notice 'El seguro asociado no existe.';
 
-	when date_out_of_range then
+	when sqlstate '22008' then
         rollback;
         raise notice 'La fecha de nacimiento está fuera de un rango permitido.';
 	
@@ -113,7 +112,7 @@ exception
 end;
 $$;
 
-// OBTENER PACIENTES
+
 create or replace function public.obtener_pacientes()
 returns table(
     id int,

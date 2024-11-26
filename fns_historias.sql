@@ -6,7 +6,7 @@ create or replace procedure public.crear_historia_clinica(
 language plpgsql
 as $$
 begin
-    insert into historias_clinicas (datos, cita_id)
+    insert into public.historias_clinicas (datos, cita_id)
     values (p_datos, p_cita_id);
 
 exception
@@ -29,7 +29,7 @@ create or replace procedure public.eliminar_historia_clinica(p_id int)
 language plpgsql
 as $$
 begin
-    delete from historias_clinicas where id = p_id;
+    delete from public.historias_clinicas where id = p_id;
 
     if not found then
         raise exception 'Error: La historia clínica con ID % no existe.', p_id;
@@ -42,7 +42,7 @@ exception
 end;
 $$;
 
--- MODIFICAR HISTORIA CLÍNICA
+
 create or replace procedure public.modificar_historia_clinica(
     p_id int,
     p_datos jsonb,
@@ -51,7 +51,7 @@ create or replace procedure public.modificar_historia_clinica(
 language plpgsql
 as $$
 begin
-    update historias_clinicas
+    update public.historias_clinicas
     set datos = p_datos,
         cita_id = p_cita_id
     where id = p_id;
@@ -85,11 +85,11 @@ returns table(
 language plpgsql
 as $$
 begin
-    if not exists (select 1 from historias_clinicas) then
+    if not exists (select 1 from public.historias_clinicas) then
         raise exception 'No se encontraron registros en la tabla de historias clínicas.';
     end if;
 
-    return query select * from historias_clinicas;
+    return query select * from public.historias_clinicas;
 
 exception
     when others then

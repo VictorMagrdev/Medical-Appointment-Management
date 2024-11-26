@@ -1,6 +1,6 @@
 create type public.tipo_seguro as enum ('publico', 'privado');
 create type public.sexo as enum ('masculino', 'femenino', 'otro');
-create type public.estado_cita as enum ('programada', 'en proceso' 'cancelada', 'completada');
+create type public.estado_cita as enum ('programada', 'en proceso', 'cancelada', 'completada');
 create type public.estado_seguro as enum ('activo', 'inactivo');
 create type public.forma_farmaceutica as enum ('tableta', 'ampolla', 'suspension');
 create type public.estado_medicamento as enum ('pendiente', 'entregado');

@@ -1,6 +1,5 @@
 --public.citas
 
-// CREAR CITA
 create or replace procedure public.crear_cita(
     p_fecha date,
     p_hora time,
@@ -53,7 +52,6 @@ begin
 end;
 $$;
 
-// TRIGGERS CITAS
 
 create or replace function public.verificar_disponibilidad_medico()
 returns trigger as $$

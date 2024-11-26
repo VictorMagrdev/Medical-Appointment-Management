@@ -12,7 +12,7 @@ create or replace procedure public.crear_examen(
 language plpgsql
 as $$
 begin
-    insert into examenes (nombre, costo, cubre_seguro, fecha_realizacion, estado, historia_clinica_id)
+    insert into public.examenes (nombre, costo, cubre_seguro, fecha_realizacion, estado, historia_clinica_id)
     values (p_nombre, p_costo, p_cubre_seguro, p_fecha_realizacion, p_estado, p_historia_clinica_id);
 
 exception
@@ -33,7 +33,7 @@ create or replace procedure public.eliminar_examen(p_id int)
 language plpgsql
 as $$
 begin
-    delete from examenes where id = p_id;
+    delete from public.examenes where id = p_id;
 
     if not found then
         raise exception 'Error: El examen con ID % no existe.', p_id;
@@ -58,7 +58,7 @@ create or replace procedure public.modificar_examen(
 language plpgsql
 as $$
 begin
-    update examenes
+    update public.examenes
     set nombre = p_nombre,
         costo = p_costo,
         cubre_seguro = p_cubre_seguro,
@@ -98,11 +98,11 @@ returns table(
 language plpgsql
 as $$
 begin
-    if not exists (select 1 from examenes) then
+    if not exists (select 1 from public.examenes) then
         raise exception 'No se encontraron registros en la tabla de exámenes.';
     end if;
 
-    return query select * from examenes;
+    return query select * from public.examenes;
 
 exception
     when others then

@@ -1,6 +1,6 @@
 --public.especialidades
 
-// CREAR ESPECIALIDAD
+
 create or replace procedure public.crear_especialidad(
     p_nombre varchar
 )
@@ -27,7 +27,7 @@ exception
 end;
 $$;
 
-// ELIMINAR ESPECIALIDAD
+
 create or replace procedure public.eliminar_especialidad(p_id int)
 language plpgsql
 as $$
@@ -44,7 +44,6 @@ exception
 end;
 $$;
 
-// MODIFICAR ESPECIALIDAD 
 create or replace procedure public.modificar_especialidad(
     p_id int, 
     p_nombre varchar
@@ -76,7 +75,7 @@ exception
 end;
 $$;
 
-// OBTENER ESPECIALIDADES
+
 create or replace function public.obtener_especialidades()
 returns table(
     id int,

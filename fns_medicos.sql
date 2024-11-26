@@ -1,6 +1,6 @@
 --medicos
 
-// CREAR MEDICO
+
 create or replace procedure public.crear_medico(
     p_nombre varchar,
     p_identificacion varchar,
@@ -13,7 +13,7 @@ language plpgsql
 as $$
 begin
   
-    insert into medicos (nombre, identificacion, registro_medico, especialidad_id, email, celular)
+    insert into public.medicos (nombre, identificacion, registro_medico, especialidad_id, email, celular)
     values (p_nombre, p_identificacion, p_registro_medico, p_especialidad_id, p_email, p_celular);
 
 exception
@@ -36,12 +36,12 @@ end;
 $$;
 
 
-// ELIMINAR MEDICO
+
 create or replace procedure public.eliminar_medico(p_id int)
 language plpgsql
 as $$
 begin
-    delete from medicos where id = p_id;
+    delete from public.medicos where id = p_id;
 	if not found then
 		raise exception 'Error: El medico con ID % no existe', p_id;
 	end if;
@@ -52,7 +52,7 @@ exception
 end;
 $$;
 
-// MODIFICAR MEDICO
+
 create or replace procedure public.modificar_medico(
     p_id int,
     p_nombre varchar,
@@ -66,7 +66,7 @@ language plpgsql
 as $$
 begin
 
-    update medicos
+    update public.medicos
     set nombre = p_nombre,
         identificacion = p_identificacion,
         registro_medico = p_registro_medico,
@@ -97,7 +97,7 @@ exception
 end;
 $$;
 
-// OBTENER MEDICOS
+
 create or replace function public.obtener_medicos()
 returns table(
     id int,

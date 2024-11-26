@@ -28,6 +28,7 @@ exception
 		raise notice 'Error: Ocurrio un error inesperado: %', sqlerrm;
 	
 end;
+$$;
 
 
 create or replace function public.resultados_examenes_paciente(

@@ -1,6 +1,6 @@
 --seguros medicos
 
-// CREAR SEGURO MEDICO
+
 create or replace procedure public.crear_seguro_medico(
     p_nombre varchar,
     p_tipo tipo_seguro,
@@ -15,11 +15,11 @@ begin
 		raise exception 'La fecha inicial debe ser menor a la final';
 	end if;
 
-    insert into seguro_medico (nombre, tipo, fecha_inicio, fecha_final, celular_contacto)
+    insert into public.seguro_medico (nombre, tipo, fecha_inicio, fecha_final, celular_contacto)
     values (p_nombre, p_tipo, p_fecha_inicio, p_fecha_final, p_celular_contacto);
 exception
 	
-	when date_out_of_range then
+	when sqlstate '22008' then
         rollback;
         raise notice 'La fecha de nacimiento está fuera de un rango permitido.';
 	
@@ -33,13 +33,13 @@ exception
 end;
 $$;
 
-// ELIMINAR SEGURO MEDICO
+
 create or replace procedure public.eliminar_seguro_medico(p_id bigint)
 language plpgsql
 as $$
 begin
 	
-	if not exists (select 1 from seguro_medico where id = p_id) then
+	if not exists (select 1 from public.seguro_medico where id = p_id) then
         raise exception 'Error: El seguro medico con ID % no existe', p_id;
     end if;
 
@@ -58,7 +58,6 @@ end;
 $$;
 
 
-// MODIFICAR SEGURO MEDICO
 create or replace procedure public.modificar_seguro_medico(
     p_id bigint,
     p_nombre varchar,
@@ -70,7 +69,7 @@ create or replace procedure public.modificar_seguro_medico(
 language plpgsql
 as $$
 begin
-    if not exists (select 1 from seguro_medico where id = p_id) then
+    if not exists (select 1 from public.seguro_medico where id = p_id) then
         raise exception 'El seguro médico con ID % no existe.', p_id;
     end if;
 
@@ -78,11 +77,11 @@ begin
 		raise exception 'La fecha inicial debe ser menor a la final';
 	end if;
 
-    if exists (select 1 from seguro_medico where id = p_id and estado = 'inactivo') then
+    if exists (select 1 from public.seguro_medico where id = p_id and estado = 'inactivo') then
         raise exception 'No se puede modificar un seguro inactivo. Asegúrese de que el seguro esté activo antes de modificarlo.';
     end if;
 
-    update seguro_medico
+    update public.seguro_medico
     set nombre = p_nombre,
         tipo = p_tipo,
         fecha_inicio = p_fecha_inicio,
@@ -94,7 +93,7 @@ exception
 	when foreign_key_violation then
         raise notice 'Error: No se puede modificar este seguro médico debido a dependencias en otras tablas.';
 
-	when date_out_of_range then
+	when sqlstate '22008' then
         rollback;
         raise notice 'La fecha de nacimiento está fuera de un rango permitido.';
 	
@@ -109,7 +108,6 @@ end;
 $$;
 
 
-// OBTENER SEGUROS MEDICOS
 create or replace function public.obtener_seguros_medicos()
 returns table(
     id bigint,
@@ -125,7 +123,7 @@ begin
 	if not exists (select 1 from public.seguro_medico) then
         raise exception 'No se encontraron registros en la tabla de pacientes.';
     end if;	
-    return query select * from seguro_medico;
+    return query select * from public.seguro_medico;
 exception
 	when others then
 		raise notice 'Error: Ocurrio un error inesperado: %', sqlerrm;
