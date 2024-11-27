@@ -22,12 +22,13 @@ pub async fn get_medicamentos(
             ));
         }
     };
+    println!("Rows obtenidos: {:?}", rows);
 
     let mut medicamentos: Vec<HashMap<String, Value>> = Vec::new();
 
     for row in rows {
         let mut medicamento = HashMap::new();
-        medicamento.insert("id".to_string(), json!(row.get::<i32, _>("id")));
+        medicamento.insert("id".to_string(), json!(row.get::<i64, _>("id")));
         medicamento.insert("nombre".to_string(), json!(row.get::<String, _>("nombre")));
         medicamento.insert(
             "principio_activo".to_string(),
@@ -49,7 +50,7 @@ pub async fn get_medicamentos(
         medicamento.insert("estado".to_string(), json!(row.get::<String, _>("estado")));
         medicamento.insert(
             "historia_clinica_id".to_string(),
-            json!(row.get::<i32, _>("historia_clinica_id")),
+            json!(row.get::<i64, _>("historia_clinica_id")),
         );
         medicamentos.push(medicamento);
     }

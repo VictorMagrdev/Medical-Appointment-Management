@@ -26,6 +26,7 @@ pub async fn post_historia_clinica(
 
     Ok(StatusCode::CREATED)
 }
+
 pub async fn delete_historia_clinica(
     State(state): State<AppState>,
     Path(id): Path<i32>,

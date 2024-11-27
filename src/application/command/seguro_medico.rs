@@ -30,17 +30,24 @@ pub async fn post_seguro_medico(
         .and_then(|v| v.as_str())
         .and_then(|s| NaiveDate::parse_from_str(s, "%Y-%m-%d").ok())
         .unwrap();
+    let estado = payload
+        .get("estado")
+        .and_then(|v| v.as_str())
+        .unwrap_or("")
+        .to_string();
+
     let celular_contacto = payload
         .get("celular_contacto")
         .and_then(|v| v.as_str())
         .unwrap_or("")
         .to_string();
 
-    if let Err(e) = sqlx::query("call public.crear_seguro_medico($1, $2::tipo_seguro, $3, $4, $5);")
+    if let Err(e) = sqlx::query("call public.crear_seguro_medico($1, $2, $3, $4, $5, $6);")
         .bind(nombre)
         .bind(tipo_seguro)
         .bind(fecha_inicio)
         .bind(fecha_final)
+        .bind(estado)
         .bind(celular_contacto)
         .execute(&state.get_db_pg())
         .await
@@ -97,29 +104,32 @@ pub async fn put_seguro_medico(
         .and_then(|v| v.as_str())
         .and_then(|s| NaiveDate::parse_from_str(s, "%Y-%m-%d").ok())
         .unwrap();
+    let estado = payload
+        .get("estado")
+        .and_then(|v| v.as_str())
+        .unwrap_or("")
+        .to_string();
     let celular_contacto = payload
         .get("celular_contacto")
         .and_then(|v| v.as_str())
         .unwrap_or("")
         .to_string();
-
-    if let Err(e) = sqlx::query(
-        "SELECT * FROM public.modificar_seguro_medico($1, $2, $3::tipo_seguro, $4, $5, $6)",
-    )
-    .bind(id)
-    .bind(nombre)
-    .bind(tipo_seguro)
-    .bind(fecha_inicio)
-    .bind(fecha_final)
-    .bind(celular_contacto)
-    .fetch_one(&state.get_db_pg())
-    .await
+    if let Err(e) =
+        sqlx::query("call public.modificar_seguro_medico($1, $2, $3, $4, $5, $6, $7)")
+            .bind(id)
+            .bind(nombre)
+            .bind(tipo_seguro)
+            .bind(fecha_inicio)
+            .bind(fecha_final)
+            .bind(estado)
+            .bind(celular_contacto)
+            .execute(&state.get_db_pg())
+            .await
     {
         return Err((
             StatusCode::INTERNAL_SERVER_ERROR,
             format!("Error al modificar paciente: {e}"),
         ));
     }
-
     Ok(StatusCode::OK)
 }

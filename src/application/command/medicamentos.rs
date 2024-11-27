@@ -50,7 +50,7 @@ pub async fn post_medicamento(
         .unwrap_or(0) as i32;
 
     if let Err(e) = sqlx::query(
-        "CALL public.crear_medicamento($1, $2, $3, $4, $5, $6, $7::estado_medicamento, $8);",
+        "CALL public.crear_medicamento($1, $2, $3, $4, $5, $6, $7, $8);",
     )
     .bind(nombre)
     .bind(principio_activo)

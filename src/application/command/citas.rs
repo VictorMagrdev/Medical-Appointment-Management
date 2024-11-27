@@ -40,7 +40,7 @@ pub async fn post_cita(
         "El ID del médico es obligatorio y debe ser un número entero".to_string(),
     ))? as i32;
 
-    if let Err(e) = sqlx::query("CALL public.crear_cita($1, $2, $3, 'programada', $4, $5)")
+    if let Err(e) = sqlx::query("CALL public.crear_cita($1, $2, $3, $4, $5)")
         .bind(fecha)
         .bind(hora)
         .bind(motivo)

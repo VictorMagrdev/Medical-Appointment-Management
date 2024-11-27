@@ -27,7 +27,7 @@ pub async fn get_historias_clinicas(
 
     for row in rows {
         let mut historia_clinica = HashMap::new();
-        historia_clinica.insert("id".to_string(), json!(row.get::<i32, _>("id")));
+        historia_clinica.insert("id".to_string(), json!(row.get::<i64, _>("id")));
         historia_clinica.insert("datos".to_string(), json!(row.get::<Value, _>("datos")));
         historia_clinica.insert("cita_id".to_string(), json!(row.get::<i32, _>("cita_id")));
         historias_clinicas.push(historia_clinica);

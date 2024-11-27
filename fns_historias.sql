@@ -6,23 +6,21 @@ create or replace procedure public.crear_historia_clinica(
 language plpgsql
 as $$
 begin
-    insert into public.historias_clinicas (datos, cita_id)
-    values (p_datos, p_cita_id);
+insert into public.historias_clinicas (datos, cita_id)
+values (p_datos, p_cita_id);
 
 exception
     when foreign_key_violation then
-        rollback;
-        raise notice 'Error: La cita asociada no existe.';
-    
-    when null_value_not_allowed then
-        rollback;
-        raise notice 'Error: Uno de los valores obligatorios es NULL.';
+        raise exception 'Error: La cita asociada no existe.';
 
-    when others then
-        rollback;
-        raise notice 'Error: Ocurrió un error inesperado: %', sqlerrm;
+when null_value_not_allowed then
+        raise exception 'Error: Uno de los valores obligatorios es NULL.';
+
+when others then
+        raise exception 'Error: Ocurrió un error inesperado: %', sqlerrm;
 end;
 $$;
+
 
 -- ELIMINAR HISTORIA CLÍNICA
 create or replace procedure public.eliminar_historia_clinica(p_id int)

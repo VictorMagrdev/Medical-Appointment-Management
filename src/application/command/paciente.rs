@@ -50,7 +50,7 @@ pub async fn post_paciente(
         .and_then(|v| v.as_i64())
         .unwrap_or(0) as i32;
 
-    if let Err(e) = sqlx::query("call public.crear_paciente($1, $2, $3, $4::sexo, $5, $6, $7, $8);")
+    if let Err(e) = sqlx::query("call public.crear_paciente($1, $2, $3, $4, $5, $6, $7, $8);")
         .bind(nombre)
         .bind(identificacion)
         .bind(fecha_nacimiento)
@@ -135,7 +135,7 @@ pub async fn put_paciente(
         .unwrap_or(0) as i32;
 
     if let Err(e) = sqlx::query(
-        "SELECT * FROM public.modificar_paciente($1, $2, $3, $4::sexo, $5, $6, $7, $8, $9)",
+        "call public.modificar_paciente($1, $2, $3, $4, $5, $6, $7, $8, $9)",
     )
     .bind(id)
     .bind(nombre)
@@ -146,7 +146,7 @@ pub async fn put_paciente(
     .bind(email)
     .bind(celular)
     .bind(seguro_id)
-    .fetch_one(&state.get_db_pg())
+    .execute(&state.get_db_pg())
     .await
     {
         return Err((
