@@ -52,11 +52,11 @@ pub async fn put_historia_clinica(
     let datos: Value = payload.get("datos").cloned().unwrap_or(Value::Null);
     let cita_id = payload.get("cita_id").and_then(|v| v.as_i64()).unwrap_or(0) as i32;
 
-    if let Err(e) = sqlx::query("SELECT * FROM public.modificar_historia_clinica($1, $2, $3);")
+    if let Err(e) = sqlx::query("call public.modificar_historia_clinica($1, $2, $3);")
         .bind(id)
         .bind(datos)
         .bind(cita_id)
-        .fetch_one(&state.get_db_pg())
+        .execute(&state.get_db_pg())
         .await
     {
         return Err((

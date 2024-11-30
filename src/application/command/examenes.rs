@@ -15,7 +15,7 @@ pub async fn post_examen(
         .and_then(|v| v.as_str())
         .unwrap_or("")
         .to_string();
-    let costo = payload.get("costo").and_then(|v| v.as_f64()).unwrap_or(0.0);
+    let costo:f32 = payload.get("costo").and_then(|v| v.as_f64()).unwrap_or(0.0) as f32;
     let cubre_seguro = payload
         .get("cubre_seguro")
         .and_then(|v| v.as_bool())
@@ -35,8 +35,8 @@ pub async fn post_examen(
         .and_then(|v| v.as_i64())
         .unwrap_or(0) as i32;
 
-    if let Err(e) = sqlx::query("call public.crear_examen($1, $2, $3, $4, $5, $6);")
-        .bind(nombre)
+    if let Err(e) = sqlx::query("call public.crear_examen($1, $2::decimal, $3, $4, $5, $6);")
+        .bind(&nombre)
         .bind(costo)
         .bind(cubre_seguro)
         .bind(fecha_realizacion)
@@ -103,7 +103,7 @@ pub async fn put_examen(
         .unwrap_or(0) as i32;
 
     if let Err(e) = sqlx::query(
-        "SELECT * FROM public.modificar_examen($1, $2, $3, $4, $5, $6, $7)",
+        "SELECT * FROM public.modificar_examen($1, $2, $3::decimal, $4, $5, $6, $7)",
     )
     .bind(id)
     .bind(nombre)

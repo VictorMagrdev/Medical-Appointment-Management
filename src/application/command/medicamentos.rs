@@ -136,7 +136,7 @@ pub async fn put_medicamento(
         .unwrap_or(0) as i32;
 
     if let Err(e) = sqlx::query(
-        "SELECT * FROM public.modificar_medicamento($1, $2, $3, $4, $5, $6, $7::estado_medicamento, $8, $9);"
+        "call public.modificar_medicamento($1, $2, $3, $4, $5, $6, $7, $8, $9);"
     )
         .bind(id)
         .bind(nombre)
@@ -147,7 +147,7 @@ pub async fn put_medicamento(
         .bind(duracion_tratamiento)
         .bind(estado)
         .bind(historia_clinica_id)
-        .fetch_one(&state.get_db_pg())
+        .execute(&state.get_db_pg())
         .await
     {
         return Err((

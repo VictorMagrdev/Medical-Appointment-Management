@@ -212,16 +212,15 @@
     #[tokio::test]
     async fn test_put_historia_clinica() {
         let client = Client::new();
-        let id = 1;
+        let id = 29;
         let url = format!("{}/historias-clinicas/{}", BASE_URL, id);
 
         let json_body = json!({
-          "fecha": "2024-11-20",
-          "nombre_paciente": "Carlos Gómez",
-          "nombre_doctor": "Dra. Ana Martínez",
-          "motivo_cita": "Chequeo general",
-          "diagnostico": "Presión arterial alta",
-          "medicamentos_recetados": "Losartán 50 mg, Aspirina 81 mg"
+          "datos": {
+            "peso": "69kg",
+            "presion_arterial": "120/80"
+          },
+          "cita_id": 101
         }
         );
 
@@ -231,7 +230,12 @@
             .send()
             .await
             .expect("Error en la petición");
-        assert_eq!(response.status(), 200);
+        let status = response.status();
+        let body = response.text().await.expect("Error al leer el cuerpo de la respuesta");
+
+        println!("body del request = {:?}", body);
+
+        assert_eq!(status, 200);
     }
 
     //medicamento
@@ -283,16 +287,18 @@
     #[tokio::test]
     async fn test_put_medicamento() {
         let client = Client::new();
-        let id = 1;
+        let id = 4;
         let url = format!("{}/medicamentos/{}", BASE_URL, id);
 
         let json_body = json!({
-          "fecha": "2024-11-20",
-          "nombre_paciente": "Carlos Gómez",
-          "nombre_doctor": "Dra. Ana Martínez",
-          "motivo_cita": "Chequeo general",
-          "diagnostico": "Presión arterial alta",
-          "medicamentos_recetados": "Losartán 50 mg, Aspirina 81 mg"
+          "nombre": "Amoxicilina",
+          "principio_activo": "Amoxicilina",
+          "forma_farmaceutica": "ampolla",
+          "dosis": "500mg",
+          "indicaciones_uso": "Tomar con agua cada 8 horas",
+          "duracion_tratamiento": "7 días",
+          "estado": "pendiente",
+          "historia_clinica_id": 29
         }
         );
 
@@ -302,7 +308,12 @@
             .send()
             .await
             .expect("Error en la petición");
-        assert_eq!(response.status(), 200);
+        let status = response.status();
+        let body = response.text().await.expect("Error al leer el cuerpo de la respuesta");
+
+        println!("body del request = {:?}", body);
+
+        assert_eq!(status, 200);
     }
 
     //auditoria
@@ -402,8 +413,8 @@
 
         let json_body = json!({
           "nombre": "Hemograma completo",
-          "costo": 45.50,
-          "cubre_seguro": true,
+          "costo": 45.554,
+          "cubre_seguro": false,
           "fecha_realizacion": "2024-11-22",
           "estado": "pendiente",
           "historia_clinica_id": 29
