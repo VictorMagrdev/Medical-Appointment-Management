@@ -50,7 +50,7 @@ begin
 	return query
 	select p.nombre, c.fecha, c.hora, m.nombre from public.citas c
 	inner join public.medicos m on c.medico_id = m.id
-	inner join public.pacientes p on c.paciente_id = p.id
+	inner join public.pacientes p on c.paciente_id = p.id;
 end;
 $$ language plpgsql;
 
