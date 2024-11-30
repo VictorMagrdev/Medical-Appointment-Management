@@ -51,7 +51,6 @@ begin
 	select p.nombre, c.fecha, c.hora, m.nombre from public.citas c
 	inner join public.medicos m on c.medico_id = m.id
 	inner join public.pacientes p on c.paciente_id = p.id
-	where m.especialidad_id = p_especialidad_id;
 end;
 $$ language plpgsql;
 
