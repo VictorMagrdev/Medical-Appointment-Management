@@ -41,7 +41,6 @@ exception
 	
 end;
 $$;
- call public.crear_paciente('a', 'asas', '2003-11-13', 'masculino', 'asas', 'asasas', '21331', 1090);
 
 create or replace procedure public.eliminar_paciente(p_id int)
 language plpgsql
@@ -115,15 +114,15 @@ $$;
 
 create or replace function public.obtener_pacientes()
 returns table(
-    id int,
-    nombre varchar,
-    identificacion varchar,
-    fecha_nacimiento date,
-    sexo varchar,
-    direccion varchar,
-    email varchar,
-    celular varchar,
-    seguro_id int
+    v_id int,
+    v_nombre varchar,
+    v_identificacion varchar,
+    v_fecha_nacimiento date,
+    v_sexo varchar,
+    v_direccion varchar,
+    v_email varchar,
+    v_celular varchar,
+    v_seguro_id int
 )
 language plpgsql
 as $$

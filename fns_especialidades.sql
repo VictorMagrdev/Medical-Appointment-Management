@@ -78,8 +78,8 @@ $$;
 
 create or replace function public.obtener_especialidades()
 returns table(
-    id int,
-    nombre varchar
+    v_id int,
+    v_nombre varchar
 )
 language plpgsql
 as $$

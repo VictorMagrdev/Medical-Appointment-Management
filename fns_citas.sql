@@ -130,3 +130,15 @@ $$ language plpgsql;
 create trigger tg_actualizar_calendario
 before update on public.citas
 for each row execute procedure public.validar_cambio_estado();
+
+
+
+create or replace function publiuc.obtener_hora_cita(
+	p_cita_id int
+)
+returns time as $$
+begin
+    return (select hora from public.citas where id = cita_id);
+end;
+$$ language plpgsql;
+

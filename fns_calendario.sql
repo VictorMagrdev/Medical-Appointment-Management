@@ -62,12 +62,12 @@ create or replace function public.obtener_cita_en_calendario(
     p_medico_id int
 )
 returns table(
-    fecha date,
-    hora time,
-    motivo varchar,
-    estado varchar,
-    paciente_id int,
-    medico_id int
+    v_fecha date,
+    v_hora time,
+    v_motivo varchar,
+    v_estado varchar,
+    v_paciente_id int,
+    v_medico_id int
 ) as $$
 begin
     return query

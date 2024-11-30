@@ -117,13 +117,13 @@ $$;
 
 create or replace function public.obtener_seguros_medicos()
 returns table(
-    id bigint,
-    nombre varchar,
-    tipo varchar,
-    fecha_inicio date,
-    fecha_final date,
-    estado varchar,
-    celular_contacto varchar
+    v_id bigint,
+    v_nombre varchar,
+    v_tipo varchar,
+    v_fecha_inicio date,
+    v_fecha_final date,
+    v_estado varchar,
+    v_celular_contacto varchar
 )
 language plpgsql
 as $$
@@ -137,5 +137,3 @@ exception
 		raise notice 'Error: Ocurrio un error inesperado: %', sqlerrm;
 end;
 $$;
-
-

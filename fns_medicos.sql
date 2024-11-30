@@ -100,13 +100,13 @@ $$;
 
 create or replace function public.obtener_medicos()
 returns table(
-    id int,
-    nombre varchar,
-    identificacion varchar,
-    registro_medico varchar,
-    especialidad_id int,
-    email varchar,
-    celular varchar
+    v_id int,
+    v_nombre varchar,
+    v_identificacion varchar,
+    v_registro_medico varchar,
+    v_especialidad_id int,
+    v_email varchar,
+    v_celular varchar
 )
 language plpgsql
 as $$
