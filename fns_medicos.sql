@@ -125,4 +125,51 @@ exception
 end;
 $$;
 
+create or replace function public.obtener_medico(
+    p_medico_id int
+)
+returns varchar as $$
+begin
+    return (
+        select *
+        from public.medicos where id = p_medico_id
+    );
+end;
+$$ language plpgsql;
+
+create or replace function public.obtener_especialidad_medico(
+    p_medico_id int
+)
+returns varchar as $$
+begin
+    return (
+        select e.nombre
+        from public.especialidades e
+        join public.medicos m on m.especialidad_id = e.id
+        where m.id = p_medico_id
+    );
+end;
+$$ language plpgsql;
+
+
+create or replace function public.obtener_identificacion_medico(
+    p_medico_id int
+)
+returns varchar as $$
+begin
+    return (
+        select identificacion from public.medicos
+		where id = p_medico_id;
+    );
+end;
+$$ language plpgsql;
+
+
+
+
+
+
+
+
+
 

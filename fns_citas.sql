@@ -132,13 +132,39 @@ before update on public.citas
 for each row execute procedure public.validar_cambio_estado();
 
 
+--Funciones
 
-create or replace function publiuc.obtener_hora_cita(
+create or replace function public.obtener_dia_cita(
+	p_cita_id int
+)
+returns date as $$
+begin
+    return (select dia from public.citas where id = p_cita_id);
+end;
+$$ language plpgsql;
+
+
+create or replace function public.obtener_hora_cita(
 	p_cita_id int
 )
 returns time as $$
 begin
-    return (select hora from public.citas where id = cita_id);
+    return (select hora from public.citas where id = p_cita_id);
+end;
+$$ language plpgsql;
+
+
+create or replace function public.obtener_medico_cita(
+    p_cita_id int
+)
+returns varchar as $$
+begin
+    return (
+        select m.nombre
+        from public.medicos m
+        join public.citas c on c.medico_id = m.id
+        where c.id = p_cita_id
+    );
 end;
 $$ language plpgsql;
 

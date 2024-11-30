@@ -139,3 +139,30 @@ exception
 end;
 $$;
 
+
+create or replace function public.obtener_paciente(
+    p_paciente_id int
+)
+returns varchar as $$
+begin
+    return (
+        select * from public.pacientes
+		where id = p_paciente_id;
+    );
+end;
+$$ language plpgsql;
+
+
+
+create or replace function public.obtener_identificacion_paciente(
+    p_paciente_id int
+)
+returns varchar as $$
+begin
+    return (
+        select identificacion from public.pacientes
+		where id = p_paciente_id;
+    );
+end;
+$$ language plpgsql;
+

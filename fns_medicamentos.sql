@@ -121,3 +121,47 @@ exception
         raise notice 'Error: Ocurrió un error inesperado: %', sqlerrm;
 end;
 $$;
+
+
+
+
+create or replace function public.obtener_nombre_medicamento(
+    p_medicamento_id int
+)
+returns varchar as $$
+begin
+    return (
+        select nombre from public.medicamentos
+		where id = p_medicamento_id;
+    );
+end;
+$$ language plpgsql;
+
+
+create or replace function public.obtener_forma_farmaceutica_medicamento(
+    p_medicamento_id int
+)
+returns varchar as $$
+begin
+    return (
+        select forma_farmaceutica::varchar from public.medicamentos
+		where id = p_medicamento_id;
+    );
+end;
+$$ language plpgsql;
+
+
+
+create or replace function public.obtener_estado_medicamento(
+    p_medicamento_id int
+)
+returns varchar as $$
+begin
+    return (
+        select estado::varchar from public.medicamentos
+		where id = p_medicamento_id;
+    );
+end;
+$$ language plpgsql;
+
+
