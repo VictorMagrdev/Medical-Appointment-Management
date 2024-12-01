@@ -95,3 +95,43 @@ exception
         raise notice 'Error: Ocurrió un error inesperado: %', sqlerrm;
 end;
 $$;
+
+
+create or replace function public.obtener_sintomas_historia(
+    p_historia_id bigint
+)
+returns text as $$
+begin
+    return (
+        select datos ->> 'sintomas'
+        from public.historias_clinicas
+        where id = p_historia_id
+    );
+end;
+$$ language plpgsql;
+
+create or replace function public.obtener_diagnostico_historia(
+    p_historia_id bigint
+)
+returns text as $$
+begin
+    return (
+        select datos ->> 'diagnostico'
+        from public.historias_clinicas
+        where id = p_historia_id
+    );
+end;
+$$ language plpgsql;
+
+create or replace function public.obtener_tratamiento_historia(
+    p_historia_id bigint
+)
+returns text as $$
+begin
+    return (
+        select datos ->> 'tratamiento'
+        from public.historias_clinicas
+        where id = p_historia_id
+    );
+end;
+$$ language plpgsql;
