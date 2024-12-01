@@ -1,9 +1,9 @@
+use crate::infrastructure::data::db::AppState;
 use axum::extract::{Path, State};
 use axum::http::StatusCode;
-use axum::Json;
 use axum::response::IntoResponse;
+use axum::Json;
 use bson::doc;
-use crate::infrastructure::data::db::AppState;
 
 pub async fn get_auditoria_by_id(
     State(client): State<AppState>,

@@ -1,5 +1,5 @@
 use crate::infrastructure::data::db::AppState;
-use axum::extract::State;
+use axum::extract::{Path, State};
 use axum::http::StatusCode;
 use axum::response::IntoResponse;
 use axum::Json;
@@ -56,4 +56,77 @@ pub async fn get_medicamentos(
     }
 
     Ok(Json(medicamentos))
+}
+
+pub async fn obtener_nombre_medicamento(
+    State(state): State<AppState>,
+    Path(medicamento_id): Path<i32>,
+) -> Result<impl IntoResponse, impl IntoResponse> {
+    let row = match sqlx::query("SELECT public.obtener_nombre_medicamento($1) as nombre")
+        .bind(medicamento_id)
+        .fetch_one(&state.get_db_pg())
+        .await
+    {
+        Ok(row) => row,
+        Err(e) => {
+            return Err((
+                StatusCode::INTERNAL_SERVER_ERROR,
+                format!("Error al obtener el nombre del medicamento: {e}"),
+            ));
+        }
+    };
+
+    let nombre: Option<String> = row.get("nombre");
+
+    Ok(Json(json!({ "nombre": nombre.unwrap_or_default() })))
+}
+
+pub async fn obtener_forma_farmaceutica_medicamento(
+    State(state): State<AppState>,
+    Path(medicamento_id): Path<i32>,
+) -> Result<impl IntoResponse, impl IntoResponse> {
+    let row = match sqlx::query(
+        "SELECT public.obtener_forma_farmaceutica_medicamento($1) as forma_farmaceutica",
+    )
+    .bind(medicamento_id)
+    .fetch_one(&state.get_db_pg())
+    .await
+    {
+        Ok(row) => row,
+        Err(e) => {
+            return Err((
+                StatusCode::INTERNAL_SERVER_ERROR,
+                format!("Error al obtener la forma farmacéutica del medicamento: {e}"),
+            ));
+        }
+    };
+
+    let forma_farmaceutica: Option<String> = row.get("forma_farmaceutica");
+
+    Ok(Json(
+        json!({ "forma_farmaceutica": forma_farmaceutica.unwrap_or_default() }),
+    ))
+}
+
+pub async fn obtener_estado_medicamento(
+    State(state): State<AppState>,
+    Path(medicamento_id): Path<i32>,
+) -> Result<impl IntoResponse, impl IntoResponse> {
+    let row = match sqlx::query("SELECT public.obtener_estado_medicamento($1) as estado")
+        .bind(medicamento_id)
+        .fetch_one(&state.get_db_pg())
+        .await
+    {
+        Ok(row) => row,
+        Err(e) => {
+            return Err((
+                StatusCode::INTERNAL_SERVER_ERROR,
+                format!("Error al obtener el estado del medicamento: {e}"),
+            ));
+        }
+    };
+
+    let estado: Option<String> = row.get("estado");
+
+    Ok(Json(json!({ "estado": estado.unwrap_or_default() })))
 }

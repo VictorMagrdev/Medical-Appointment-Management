@@ -1,5 +1,5 @@
 use crate::infrastructure::data::db::AppState;
-use axum::extract::State;
+use axum::extract::{Path, State};
 use axum::http::StatusCode;
 use axum::response::IntoResponse;
 use axum::Json;
@@ -50,4 +50,77 @@ pub async fn get_medicos(
     }
 
     Ok(Json(medicos))
+}
+
+pub async fn obtener_medico(
+    State(state): State<AppState>,
+    Path(medico_id): Path<i32>,
+) -> Result<impl IntoResponse, impl IntoResponse> {
+    let row = match sqlx::query("SELECT public.obtener_medico($1) as medico")
+        .bind(medico_id)
+        .fetch_one(&state.get_db_pg())
+        .await
+    {
+        Ok(row) => row,
+        Err(e) => {
+            return Err((
+                StatusCode::INTERNAL_SERVER_ERROR,
+                format!("Error al obtener el médico: {e}"),
+            ));
+        }
+    };
+
+    let medico: Option<String> = row.get("medico");
+
+    Ok(Json(json!({ "medico": medico.unwrap_or_default() })))
+}
+
+pub async fn obtener_especialidad_medico(
+    State(state): State<AppState>,
+    Path(medico_id): Path<i32>,
+) -> Result<impl IntoResponse, impl IntoResponse> {
+    let row = match sqlx::query("SELECT public.obtener_especialidad_medico($1) as especialidad")
+        .bind(medico_id)
+        .fetch_one(&state.get_db_pg())
+        .await
+    {
+        Ok(row) => row,
+        Err(e) => {
+            return Err((
+                StatusCode::INTERNAL_SERVER_ERROR,
+                format!("Error al obtener la especialidad del médico: {e}"),
+            ));
+        }
+    };
+
+    let especialidad: Option<String> = row.get("especialidad");
+
+    Ok(Json(
+        json!({ "especialidad": especialidad.unwrap_or_default() }),
+    ))
+}
+
+pub async fn obtener_identificacion_medico(
+    State(state): State<AppState>,
+    Path(medico_id): Path<i32>,
+) -> Result<impl IntoResponse, impl IntoResponse> {
+    let row = match sqlx::query("SELECT public.obtener_identificacion_medico($1) as identificacion")
+        .bind(medico_id)
+        .fetch_one(&state.get_db_pg())
+        .await
+    {
+        Ok(row) => row,
+        Err(e) => {
+            return Err((
+                StatusCode::INTERNAL_SERVER_ERROR,
+                format!("Error al obtener la identificación del médico: {e}"),
+            ));
+        }
+    };
+
+    let identificacion: Option<String> = row.get("identificacion");
+
+    Ok(Json(
+        json!({ "identificacion": identificacion.unwrap_or_default() }),
+    ))
 }

@@ -49,19 +49,17 @@ pub async fn post_medicamento(
         .and_then(|v| v.as_i64())
         .unwrap_or(0) as i32;
 
-    if let Err(e) = sqlx::query(
-        "CALL public.crear_medicamento($1, $2, $3, $4, $5, $6, $7, $8);",
-    )
-    .bind(nombre)
-    .bind(principio_activo)
-    .bind(forma_farmaceutica)
-    .bind(dosis)
-    .bind(indicaciones_uso)
-    .bind(duracion_tratamiento)
-    .bind(estado)
-    .bind(historia_clinica_id)
-    .execute(&state.get_db_pg())
-    .await
+    if let Err(e) = sqlx::query("CALL public.crear_medicamento($1, $2, $3, $4, $5, $6, $7, $8);")
+        .bind(nombre)
+        .bind(principio_activo)
+        .bind(forma_farmaceutica)
+        .bind(dosis)
+        .bind(indicaciones_uso)
+        .bind(duracion_tratamiento)
+        .bind(estado)
+        .bind(historia_clinica_id)
+        .execute(&state.get_db_pg())
+        .await
     {
         return Err((
             StatusCode::INTERNAL_SERVER_ERROR,
@@ -135,20 +133,19 @@ pub async fn put_medicamento(
         .and_then(|v| v.as_i64())
         .unwrap_or(0) as i32;
 
-    if let Err(e) = sqlx::query(
-        "call public.modificar_medicamento($1, $2, $3, $4, $5, $6, $7, $8, $9);"
-    )
-        .bind(id)
-        .bind(nombre)
-        .bind(principio_activo)
-        .bind(forma_farmaceutica)
-        .bind(dosis)
-        .bind(indicaciones_uso)
-        .bind(duracion_tratamiento)
-        .bind(estado)
-        .bind(historia_clinica_id)
-        .execute(&state.get_db_pg())
-        .await
+    if let Err(e) =
+        sqlx::query("call public.modificar_medicamento($1, $2, $3, $4, $5, $6, $7, $8, $9);")
+            .bind(id)
+            .bind(nombre)
+            .bind(principio_activo)
+            .bind(forma_farmaceutica)
+            .bind(dosis)
+            .bind(indicaciones_uso)
+            .bind(duracion_tratamiento)
+            .bind(estado)
+            .bind(historia_clinica_id)
+            .execute(&state.get_db_pg())
+            .await
     {
         return Err((
             StatusCode::INTERNAL_SERVER_ERROR,

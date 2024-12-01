@@ -114,17 +114,16 @@ pub async fn put_seguro_medico(
         .and_then(|v| v.as_str())
         .unwrap_or("")
         .to_string();
-    if let Err(e) =
-        sqlx::query("call public.modificar_seguro_medico($1, $2, $3, $4, $5, $6, $7)")
-            .bind(id)
-            .bind(nombre)
-            .bind(tipo_seguro)
-            .bind(fecha_inicio)
-            .bind(fecha_final)
-            .bind(estado)
-            .bind(celular_contacto)
-            .execute(&state.get_db_pg())
-            .await
+    if let Err(e) = sqlx::query("call public.modificar_seguro_medico($1, $2, $3, $4, $5, $6, $7)")
+        .bind(id)
+        .bind(nombre)
+        .bind(tipo_seguro)
+        .bind(fecha_inicio)
+        .bind(fecha_final)
+        .bind(estado)
+        .bind(celular_contacto)
+        .execute(&state.get_db_pg())
+        .await
     {
         return Err((
             StatusCode::INTERNAL_SERVER_ERROR,

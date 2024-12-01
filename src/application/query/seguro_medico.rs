@@ -27,20 +27,23 @@ pub async fn get_seguros_medicos(
 
     for row in rows {
         let mut seguro_medico = HashMap::new();
-        seguro_medico.insert("id".to_string(), json!(row.get::<i64, _>("id")));
-        seguro_medico.insert("nombre".to_string(), json!(row.get::<String, _>("nombre")));
-        seguro_medico.insert("tipo".to_string(), json!(row.get::<String, _>("tipo")));
+        seguro_medico.insert("id".to_string(), json!(row.get::<i64, _>("v_id")));
+        seguro_medico.insert(
+            "nombre".to_string(),
+            json!(row.get::<String, _>("v_nombre")),
+        );
+        seguro_medico.insert("tipo".to_string(), json!(row.get::<String, _>("v_tipo")));
         seguro_medico.insert(
             "fecha_inicio".to_string(),
-            json!(row.get::<chrono::NaiveDate, _>("fecha_inicio")),
+            json!(row.get::<chrono::NaiveDate, _>("v_fecha_inicio")),
         );
         seguro_medico.insert(
             "fecha_final".to_string(),
-            json!(row.get::<chrono::NaiveDate, _>("fecha_final")),
+            json!(row.get::<chrono::NaiveDate, _>("v_fecha_final")),
         );
         seguro_medico.insert(
             "celular_contacto".to_string(),
-            json!(row.get::<String, _>("celular_contacto")),
+            json!(row.get::<String, _>("v_celular_contacto")),
         );
         seguros_medicos.push(seguro_medico);
     }

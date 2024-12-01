@@ -27,8 +27,11 @@ pub async fn get_especialidades(
 
     for row in rows {
         let mut especialidad = HashMap::new();
-        especialidad.insert("id".to_string(), json!(row.get::<i32, _>("id")));
-        especialidad.insert("nombre".to_string(), json!(row.get::<String, _>("nombre")));
+        especialidad.insert("id".to_string(), json!(row.get::<i32, _>("v_id")));
+        especialidad.insert(
+            "nombre".to_string(),
+            json!(row.get::<String, _>("v_nombre")),
+        );
         especialidades.push(especialidad);
     }
 

@@ -134,20 +134,19 @@ pub async fn put_paciente(
         .and_then(|v| v.as_i64())
         .unwrap_or(0) as i32;
 
-    if let Err(e) = sqlx::query(
-        "call public.modificar_paciente($1, $2, $3, $4, $5, $6, $7, $8, $9)",
-    )
-    .bind(id)
-    .bind(nombre)
-    .bind(identificacion)
-    .bind(fecha_nacimiento)
-    .bind(sexo)
-    .bind(direccion)
-    .bind(email)
-    .bind(celular)
-    .bind(seguro_id)
-    .execute(&state.get_db_pg())
-    .await
+    if let Err(e) =
+        sqlx::query("call public.modificar_paciente($1, $2, $3, $4, $5, $6, $7, $8, $9)")
+            .bind(id)
+            .bind(nombre)
+            .bind(identificacion)
+            .bind(fecha_nacimiento)
+            .bind(sexo)
+            .bind(direccion)
+            .bind(email)
+            .bind(celular)
+            .bind(seguro_id)
+            .execute(&state.get_db_pg())
+            .await
     {
         return Err((
             StatusCode::INTERNAL_SERVER_ERROR,

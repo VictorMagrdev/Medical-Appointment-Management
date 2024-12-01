@@ -1,5 +1,5 @@
 use crate::infrastructure::data::db::AppState;
-use axum::extract::State;
+use axum::extract::{Path, State};
 use axum::http::StatusCode;
 use axum::response::IntoResponse;
 use axum::Json;
@@ -55,4 +55,53 @@ pub async fn get_pacientes(
     }
 
     Ok(Json(pacientes))
+}
+
+pub async fn obtener_paciente(
+    State(state): State<AppState>,
+    Path(paciente_id): Path<i32>,
+) -> Result<impl IntoResponse, impl IntoResponse> {
+    let row = match sqlx::query("SELECT public.obtener_paciente($1) as paciente")
+        .bind(paciente_id)
+        .fetch_one(&state.get_db_pg())
+        .await
+    {
+        Ok(row) => row,
+        Err(e) => {
+            return Err((
+                StatusCode::INTERNAL_SERVER_ERROR,
+                format!("Error al obtener el paciente: {e}"),
+            ));
+        }
+    };
+
+    let paciente: Option<String> = row.get("paciente");
+
+    Ok(Json(json!({ "paciente": paciente.unwrap_or_default() })))
+}
+
+pub async fn obtener_identificacion_paciente(
+    State(state): State<AppState>,
+    Path(paciente_id): Path<i32>,
+) -> Result<impl IntoResponse, impl IntoResponse> {
+    let row =
+        match sqlx::query("SELECT public.obtener_identificacion_paciente($1) as identificacion")
+            .bind(paciente_id)
+            .fetch_one(&state.get_db_pg())
+            .await
+        {
+            Ok(row) => row,
+            Err(e) => {
+                return Err((
+                    StatusCode::INTERNAL_SERVER_ERROR,
+                    format!("Error al obtener la identificación del paciente: {e}"),
+                ));
+            }
+        };
+
+    let identificacion: Option<String> = row.get("identificacion");
+
+    Ok(Json(
+        json!({ "identificacion": identificacion.unwrap_or_default() }),
+    ))
 }

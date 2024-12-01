@@ -158,4 +158,3 @@ pub async fn put_auditoria_by_id(
         }
     }
 }
-

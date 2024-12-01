@@ -15,7 +15,7 @@ pub async fn post_examen(
         .and_then(|v| v.as_str())
         .unwrap_or("")
         .to_string();
-    let costo:f32 = payload.get("costo").and_then(|v| v.as_f64()).unwrap_or(0.0) as f32;
+    let costo: f32 = payload.get("costo").and_then(|v| v.as_f64()).unwrap_or(0.0) as f32;
     let cubre_seguro = payload
         .get("cubre_seguro")
         .and_then(|v| v.as_bool())
@@ -102,18 +102,16 @@ pub async fn put_examen(
         .and_then(|v| v.as_i64())
         .unwrap_or(0) as i32;
 
-    if let Err(e) = sqlx::query(
-        "SELECT * FROM public.modificar_examen($1, $2, $3::decimal, $4, $5, $6, $7)",
-    )
-    .bind(id)
-    .bind(nombre)
-    .bind(costo)
-    .bind(cubre_seguro)
-    .bind(fecha_realizacion)
-    .bind(estado)
-    .bind(historia_clinica_id)
-    .fetch_one(&state.get_db_pg())
-    .await
+    if let Err(e) = sqlx::query("call public.modificar_examen($1, $2, $3::decimal, $4, $5, $6, $7)")
+        .bind(id)
+        .bind(nombre)
+        .bind(costo)
+        .bind(cubre_seguro)
+        .bind(fecha_realizacion)
+        .bind(estado)
+        .bind(historia_clinica_id)
+        .execute(&state.get_db_pg())
+        .await
     {
         return Err((
             StatusCode::INTERNAL_SERVER_ERROR,
