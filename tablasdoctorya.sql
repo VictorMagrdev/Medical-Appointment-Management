@@ -64,7 +64,8 @@ create table public.citas (
 
 create table public.historias_clinicas (
     id bigint primary key default nextval('public.historias_clinicas_id_seq'),
-	datos jsonb not null, /*  fecha date not null, sintomas text, diagnostico text, tratamiento text, observaciones text,*/
+    fecha date not null,
+	datos jsonb not null, /*  sintomas text, diagnostico text, tratamiento text, observaciones text,*/
     cita_id int references public.citas(id)
 );
 

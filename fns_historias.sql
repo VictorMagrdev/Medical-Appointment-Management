@@ -6,8 +6,8 @@ create or replace procedure public.crear_historia_clinica(
 language plpgsql
 as $$
 begin
-insert into public.historias_clinicas (datos, cita_id)
-values (p_datos, p_cita_id);
+insert into public.historias_clinicas (datos,f echa, cita_id)
+values (p_datos, now(), p_cita_id);
 
 exception
     when foreign_key_violation then
@@ -76,9 +76,10 @@ $$;
 -- OBTENER HISTORIAS CLINICAS
 create or replace function public.obtener_historias_clinicas()
 returns table(
-    id bigint,
-    datos jsonb,
-    cita_id int
+    v_id bigint,
+    v_fecha date,
+    v_datos jsonb,
+    v_cita_id int
 )
 language plpgsql
 as $$
