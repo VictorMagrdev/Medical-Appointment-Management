@@ -18,15 +18,12 @@ begin
 
 exception
     when foreign_key_violation then
-        rollback;
         raise notice 'La historia clínica asociada no existe.';
     
     when null_value_not_allowed then
-        rollback;
         raise notice 'Uno de los valores obligatorios es NULL.';
     
     when others then
-        rollback;
         raise notice 'Error: Ocurrió un error inesperado: %', sqlerrm;
 end;
 $$;
@@ -80,15 +77,12 @@ begin
 
 exception
     when foreign_key_violation then
-        rollback;
         raise notice 'La historia clínica asociada no existe.';
     
     when null_value_not_allowed then
-        rollback;
         raise notice 'Uno de los valores obligatorios es NULL.';
     
     when others then
-        rollback;
         raise notice 'Error: Ocurrió un error inesperado: %', sqlerrm;
 end;
 $$;
@@ -164,4 +158,41 @@ begin
 end;
 $$ language plpgsql;
 
+
+-- Triggers
+
+create or replace function public.validar_medicamento_unico()
+returns trigger as $$
+begin
+    if exists (
+        select 1
+        from public.medicamentos
+        where nombre = new.nombre
+          and historia_clinica_id = new.historia_clinica_id
+    ) then
+        raise exception 'El medicamento "%", ya está asignado a la historia clínica %',
+            new.nombre, new.historia_clinica_id;
+    end if;
+    return new;
+end;
+$$ language plpgsql;
+
+create trigger trg_validar_medicamento_unico
+before insert or update on public.medicamentos
+for each row execute function public.validar_medicamento_unico();
+
+
+create or replace function publicar.establecer_estado_pendiente_medicamento()
+returns trigger as $$
+begin
+    if new.estado is null then
+        new.estado := 'pendiente';
+    end if;
+    return new;
+end;
+$$ language plpgsql;
+
+create trigger trg_establecer_estado_pendiente_medicamento
+before insert on public.medicamentos
+for each row execute function public.establecer_estado_pendiente_medicamento();
 

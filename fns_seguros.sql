@@ -137,3 +137,23 @@ exception
 		raise notice 'Error: Ocurrio un error inesperado: %', sqlerrm;
 end;
 $$;
+
+
+
+--Triggers
+
+create or replace function public.actualizar_estado_seguro()
+returns trigger as $$
+begin
+    if new.fecha_final < current_date then
+        new.estado := 'inactivo';
+    end if;
+    return new;
+end;
+$$ language plpgsql;
+
+create trigger trg_actualizar_estado_seguro
+before insert or update on public.seguro_medico
+for each row
+execute function public.actualizar_estado_seguro();
+

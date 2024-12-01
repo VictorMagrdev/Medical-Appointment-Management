@@ -10,24 +10,22 @@ create or replace procedure public.crear_cita(
 language plpgsql
 as $$
 begin
-    -- Inserción en la tabla citas
 insert into public.citas (fecha, hora, motivo, estado, paciente_id, medico_id)
 values (p_fecha, p_hora, p_motivo, 'programada'::public.estado_cita, p_paciente_id, p_medico_id);
 
 exception
-    -- Control de excepciones
     when unique_violation then
         raise notice 'Ya existe una cita programada con esta combinación de fecha y hora.';
 
-when foreign_key_violation then
-        raise notice 'El paciente o médico asociado no existe.';
-
-when not_null_violation then
-        raise notice 'Uno de los valores obligatorios es NULL.';
-
-when others then
-        raise notice 'Error inesperado: %', sqlstate;
-end;
+	when foreign_key_violation then
+	        raise notice 'El paciente o médico asociado no existe.';
+	
+	when not_null_violation then
+	        raise notice 'Uno de los valores obligatorios es NULL.';
+	
+	when others then
+	        raise notice 'Error inesperado: %', sqlstate;
+	end;
 $$;
 
 

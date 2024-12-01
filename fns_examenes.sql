@@ -110,7 +110,27 @@ exception
 end;
 $$;
 
+--trigger
 
+create or replace function public.validar_examen_unico_por_historia()
+returns trigger as $$
+begin
+    if exists (
+        select 1
+        from public.examenes
+        where nombre = new.nombre
+          and historia_clinica_id = new.historia_clinica_id
+    ) then
+        raise exception 'El examen "%", ya está asignado a la historia clínica %', 
+            new.nombre, new.historia_clinica_id;
+    end if;
+    return new;
+end;
+$$ language plpgsql;
+
+create trigger trg_validar_examen_unico_por_historia
+before insert or update on public.examenes
+for each row execute function public.validar_examen_unico_por_historia();
 
 
 
