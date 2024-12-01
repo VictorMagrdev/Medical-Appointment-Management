@@ -196,3 +196,25 @@ create trigger trg_establecer_estado_pendiente_medicamento
 before insert on public.medicamentos
 for each row execute function public.establecer_estado_pendiente_medicamento();
 
+--cursores
+
+create or replace function public.obtener_medicamentos_pendientes(historia_clinica_id integer)
+returns void as $$
+declare
+    medicamento_cursor cursor for 
+        select m.id, m.nombre, m.estado
+        from public.medicamentos m
+        where m.historia_clinica_id = historia_clinica_id
+        and m.estado = 'pendiente';
+    medicamento_record record;
+begin
+    open medicamento_cursor;
+    loop
+        fetch medicamento_cursor into medicamento_record;
+        exit when not found;
+        raise notice 'Medicamento ID: %, Nombre: %, Estado: %', medicamento_record.id, medicamento_record.nombre, medicamento_record.estado;
+    end loop;
+    close medicamento_cursor;
+end;
+$$ language plpgsql;
+

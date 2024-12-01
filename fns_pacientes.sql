@@ -166,3 +166,26 @@ begin
 end;
 $$ language plpgsql;
 
+--cursor
+
+create or replace function public.obtener_pacientes_con_seguro()
+returns void as $$
+declare
+    paciente_cursor cursor for 
+        select p.id, p.nombre, s.nombre as seguro_nombre
+        from public.pacientes p
+        join public.seguro_medico s on p.seguro_id = s.id;
+    paciente_record record;
+begin
+    open paciente_cursor;
+    loop
+        fetch paciente_cursor into paciente_record;
+        exit when not found;
+        raise notice 'ID: %, Nombre: %, Seguro: %', paciente_record.id, paciente_record.nombre, paciente_record.seguro_nombre;
+    end loop;
+    close paciente_cursor;
+end;
+$$ language plpgsql;
+
+
+

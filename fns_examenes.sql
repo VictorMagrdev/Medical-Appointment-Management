@@ -133,10 +133,26 @@ before insert or update on public.examenes
 for each row execute function public.validar_examen_unico_por_historia();
 
 
+--cursores
 
-
-
-
+create or replace function public.obtener_examenes_por_fecha(fecha date)
+returns void as $$
+declare
+    examen_cursor cursor for 
+        select e.id, e.nombre, e.costo
+        from public.examenes e
+        where e.fecha_realizacion = fecha;
+    examen_record record;
+begin
+    open examen_cursor;
+    loop
+        fetch examen_cursor into examen_record;
+        exit when not found;
+        raise notice 'Examen ID: %, Nombre: %, Costo: %', examen_record.id, examen_record.nombre, examen_record.costo;
+    end loop;
+    close examen_cursor;
+end;
+$$ language plpgsql;
 
 
 
