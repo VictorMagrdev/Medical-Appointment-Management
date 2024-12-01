@@ -18,19 +18,15 @@ begin
 
 exception
 	when unique_violation then
-		rollback;
 		raise notice 'La identificacion ya existe en el sistema.';
 	
 	when foreign_key_violation then
-		rollback;
 		raise notice 'La especialidad asociada no existe.';
 	
 	when null_value_not_allowed then
-		rollback;
 		raise notice 'Uno de los valores obligatorios es NULL';
 	
 	when others then
-		rollback;
 		raise notice 'Error: Ocurrio un error inesperado: %', sqlerrm;
 end;
 $$;
@@ -47,7 +43,6 @@ begin
 	end if;
 exception
 	when others then
-		rollback;
 		raise notice 'Error: Ocurrio un error inesperado: %', sqlerrm;
 end;
 $$;
@@ -80,19 +75,15 @@ begin
 	end if;
 exception
 	when unique_violation then
-		rollback;
 		raise notice 'La identificacion ya existe en el sistema.';
 	
 	when foreign_key_violation then
-		rollback;
 		raise notice 'La especialidad asociada no existe.';
 	
 	when null_value_not_allowed then
-		rollback;
 		raise notice 'Uno de los valores obligatorios es NULL';
 	
 	when others then
-		rollback;
 		raise notice 'Error: Ocurrio un error inesperado: %', sqlerrm;
 end;
 $$;
