@@ -3,7 +3,7 @@ use axum::extract::{Path, State};
 use axum::http::StatusCode;
 use axum::response::IntoResponse;
 use axum::Json;
-use serde_json::{json, Value};
+use serde_json::json;
 use sqlx::Row;
 
 pub async fn obtener_dia_cita(

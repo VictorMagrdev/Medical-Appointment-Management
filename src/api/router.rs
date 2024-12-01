@@ -41,7 +41,7 @@ use crate::application::query::paciente::{
 };
 use crate::application::query::seguro_medico::get_seguros_medicos;
 use crate::infrastructure::data::db::AppState;
-use axum::routing::{delete, get, post, put};
+use axum::routing::{get, post, put};
 use axum::Router;
 
 pub fn create_router(state: AppState) -> Router {
@@ -50,13 +50,22 @@ pub fn create_router(state: AppState) -> Router {
             "/api/v1",
             Router::new()
                 .route("/pacientes", post(post_paciente).get(get_pacientes))
-                .route("/pacientes/:id", put(put_paciente).delete(delete_paciente))
+                .route(
+                    "/pacientes/:id",
+                    get(obtener_paciente)
+                        .put(put_paciente)
+                        .delete(delete_paciente),
+                )
+                .route(
+                    "/pacientes/identificacion/:id",
+                    get(obtener_identificacion_paciente),
+                )
                 .route("/auditorias", post(post_auditoria))
                 .route(
                     "/auditorias/:id",
-                    delete(delete_auditoria)
+                    get(get_auditoria_by_id)
                         .put(put_auditoria_by_id)
-                        .get(get_auditoria_by_id),
+                        .delete(delete_auditoria),
                 )
                 .route("/examenes", post(post_examen).get(get_examenes))
                 .route("/examenes/:id", put(put_examen).delete(delete_examen))
@@ -74,8 +83,15 @@ pub fn create_router(state: AppState) -> Router {
                 )
                 .route(
                     "/medicamentos/:id",
-                    put(put_medicamento).delete(delete_medicamento),
+                    get(obtener_nombre_medicamento)
+                        .put(put_medicamento)
+                        .delete(delete_medicamento),
                 )
+                .route(
+                    "/medicamentos/formula/:id",
+                    get(obtener_forma_farmaceutica_medicamento),
+                )
+                .route("/medicamentos/estado/:id", get(obtener_estado_medicamento))
                 .route(
                     "/seguros-medicos",
                     post(post_seguro_medico).get(get_seguros_medicos),
@@ -85,29 +101,10 @@ pub fn create_router(state: AppState) -> Router {
                     put(put_seguro_medico).delete(delete_seguro_medico),
                 )
                 .route("/medicos", post(post_medico).get(get_medicos))
-                .route("/medicos/:id", put(put_medico).delete(delete_medico))
-                .route("/calendario/medico/:id", get(get_calendario_por_medico))
                 .route(
-                    "/calendario/especialidad/:id",
-                    get(get_calendario_por_especialidad),
+                    "/medicos/:id",
+                    get(obtener_medico).put(put_medico).delete(delete_medico),
                 )
-                .route("/calendario/paciente/:id", get(get_calendario_por_paciente))
-                .route(
-                    "/especialidades",
-                    get(get_especialidades).post(post_especialidad),
-                )
-                .route(
-                    "/especialidades/:id",
-                    put(put_especialidad).delete(delete_especialidad),
-                )
-                .route("/cita", post(post_cita))
-                .route("/cita/:id", put(put_estado_cita))
-                .route("/pacientes/:id", get(obtener_paciente))
-                .route(
-                    "/pacientes/identificacion/:id",
-                    get(obtener_identificacion_paciente),
-                )
-                .route("/medicos/:id", get(obtener_medico))
                 .route(
                     "/medicos/especialidad/:id",
                     get(obtener_especialidad_medico),
@@ -116,12 +113,22 @@ pub fn create_router(state: AppState) -> Router {
                     "/medicos/identificacion/:id",
                     get(obtener_identificacion_medico),
                 )
-                .route("/medicamentos/:id", get(obtener_nombre_medicamento))
+                .route("/calendario/medico/:id", get(get_calendario_por_medico))
                 .route(
-                    "/medicamentos/formula/:id",
-                    get(obtener_forma_farmaceutica_medicamento),
+                    "/calendario/especialidad/:id",
+                    get(get_calendario_por_especialidad),
                 )
-                .route("/medicamentos/estado/:id", get(obtener_estado_medicamento))
+                .route("/calendario/paciente/:id", get(get_calendario_por_paciente))
+                .route(
+                    "/especialidades",
+                    post(post_especialidad).get(get_especialidades),
+                )
+                .route(
+                    "/especialidades/:id",
+                    put(put_especialidad).delete(delete_especialidad),
+                )
+                .route("/cita", post(post_cita))
+                .route("/cita/:id", put(put_estado_cita))
                 .route("/cita/dia/:id", get(obtener_dia_cita))
                 .route("/cita/hora/:id", get(obtener_hora_cita))
                 .route("/cita/medico/:id", get(obtener_medico_cita))
