@@ -136,3 +136,47 @@ begin
     where id = p_remision_id;
 end;
 $$ language plpgsql;
+
+--triggers
+
+create or replace function public.validar_remision_unica()
+returns trigger as $$
+begin
+    if exists (
+        select 1 
+        from public.remisiones_medicas
+        where historia_clinica_id = new.historia_clinica_id 
+          and medico_id = new.medico_id
+          and motivo_remision = new.motivo_remision
+    ) then
+        raise exception 'Ya existe una remisión con el mismo motivo para el médico % en la historia clínica %', 
+            new.medico_id, new.historia_clinica_id;
+    end if;
+    return new;
+end;
+$$ language plpgsql;
+
+create trigger trg_validar_remision_unica
+before insert or update on public.remisiones_medicas
+for each row
+execute function public.validar_remision_unica();
+
+
+create or replace function public.validar_fecha_remision()
+returns trigger as $$
+begin
+    if exists (
+        select 1
+        from public.citas c
+        where c.id = new.historia_clinica_id
+        and new.fecha < c.fecha
+    ) then
+        raise exception 'La fecha de la remisión no puede ser anterior a la fecha de la cita';
+    end if;
+    return new;
+end;
+$$ language plpgsql;
+
+create trigger trg_validar_fecha_remision
+before insert or update on public.remisiones_medicas
+for each row execute function public.validar_fecha_remision();
