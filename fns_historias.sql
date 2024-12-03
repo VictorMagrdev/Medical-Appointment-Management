@@ -96,6 +96,7 @@ exception
 end;
 $$;
 
+-- funciones
 
 create or replace function public.obtener_sintomas_historia(
     p_historia_id bigint

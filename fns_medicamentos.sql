@@ -90,15 +90,15 @@ $$;
 -- Obtener Medicamentos
 create or replace function public.obtener_medicamentos()
 returns table(
-    id int,
-    nombre varchar,
-    principio_activo varchar,
-    forma_farmaceutica varchar,
-    dosis varchar,
-    indicaciones_uso text,
-    duracion_tratamiento varchar,
-    estado varchar,
-    historia_clinica_id int
+    v_id int,
+    v_nombre varchar,
+    v_principio_activo varchar,
+    v_forma_farmaceutica varchar,
+    v_dosis varchar,
+    v_indicaciones_uso text,
+    v_duracion_tratamiento varchar,
+    v_estado varchar,
+    v_historia_clinica_id int
 )
 language plpgsql
 as $$
@@ -116,6 +116,24 @@ exception
 end;
 $$;
 
+create or replace function public.obtener_nombre_medicamentos()
+returns table(
+    v_nombre varchar
+)
+language plpgsql
+as $$
+begin
+    if not exists (select 1 from public.medicamentos) then
+        raise exception 'No se encontraron registros en la tabla de medicamentos.';
+    end if;
+
+    return query select nombre from public.medicamentos;
+
+exception
+    when others then
+        raise notice 'Error: Ocurrió un error inesperado: %', sqlerrm;
+end;
+$$;
 
 
 
