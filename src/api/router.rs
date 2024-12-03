@@ -43,6 +43,7 @@ use crate::application::query::seguro_medico::get_seguros_medicos;
 use crate::infrastructure::data::db::AppState;
 use axum::routing::{get, post, put};
 use axum::Router;
+use crate::application::command::remisiones::{add_xml_node, create_medical_referral, delete_medical_referral, delete_xml_node, modify_xml_node, update_medical_referral};
 
 pub fn create_router(state: AppState) -> Router {
     Router::new()
@@ -147,6 +148,17 @@ pub fn create_router(state: AppState) -> Router {
                 .route(
                     "/informes/examenes-pendientes/",
                     post(generar_informe_examenes_pendientes_pacientes),
+                ).route(
+                "/remisiones/",
+                post(create_medical_referral),
+            )
+                .route(
+                    "/remisiones/:id",
+                    put(update_medical_referral).delete(delete_medical_referral),
+                )
+                .route(
+                    "/remisiones/nodes/:id",
+                    post(add_xml_node).put(modify_xml_node).delete(delete_xml_node),
                 ),
         )
         .with_state(state)

@@ -8,6 +8,6 @@ pub mod informes;
 pub mod medicamentos;
 pub mod medicos;
 pub mod paciente;
-pub mod remisiones_medicas;
 pub mod resultados_examenes;
 pub mod seguro_medico;
+pub mod remisiones;
