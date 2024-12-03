@@ -193,3 +193,17 @@ begin
     );
 end;
 $$ language plpgsql;
+
+
+create or replace function public.obtener_motivo_cita(
+    p_cita_id int
+)
+returns varchar as $$
+begin
+    return (
+        select motivo
+        from public.citas
+        where id = p_cita_id
+    );
+end;
+$$ language plpgsql;

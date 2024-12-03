@@ -6,7 +6,9 @@ use axum::response::IntoResponse;
 use axum::Json;
 use bson::doc;
 use chrono::NaiveDate;
-use serde_json::Value;
+use serde_json::{json, Value};
+use sqlx::{PgPool, Row};
+use crate::application::query::citas::verificar_estado_cita;
 
 pub async fn post_auditoria(
     State(client): State<AppState>,
@@ -156,5 +158,109 @@ pub async fn put_auditoria_by_id(
             eprintln!("Error al insertar el documento: {:?}", err);
             Err(StatusCode::INTERNAL_SERVER_ERROR)
         }
+    }
+}
+
+//Para probar
+pub async fn obtener_detalles_auditoria(
+    pool: &PgPool,
+    cita_id: i32,
+    historia_id: i64,
+) -> Result<Value, StatusCode> {
+    let fecha_result = sqlx::query("SELECT public.obtener_dia_cita($1) as fecha")
+        .bind(cita_id)
+        .fetch_one(pool)
+        .await;
+
+    let fecha = match fecha_result {
+        Ok(row) => row.get::<String, _>("fecha"),
+        Err(_) => return Err(StatusCode::INTERNAL_SERVER_ERROR),
+    };
+
+    let paciente_result = sqlx::query("SELECT public.obtener_paciente_cita($1) as paciente")
+        .bind(cita_id)
+        .fetch_one(pool)
+        .await;
+
+    let nombre_paciente = match paciente_result {
+        Ok(row) => row.get::<String, _>("paciente"),
+        Err(_) => return Err(StatusCode::INTERNAL_SERVER_ERROR),
+    };
+
+    let doctor_result = sqlx::query("SELECT public.obtener_medico_cita($1) as doctor")
+        .bind(cita_id)
+        .fetch_one(pool)
+        .await;
+
+    let nombre_doctor = match doctor_result {
+        Ok(row) => row.get::<String, _>("doctor"),
+        Err(_) => return Err(StatusCode::INTERNAL_SERVER_ERROR),
+    };
+
+    let diagnostico_result = sqlx::query("SELECT public.obtener_diagnostico_historia($1) as diagnostico")
+        .bind(historia_id)
+        .fetch_one(pool)
+        .await;
+
+    let diagnostico = match diagnostico_result {
+        Ok(row) => row.get::<String, _>("diagnostico"),
+        Err(_) => return Err(StatusCode::INTERNAL_SERVER_ERROR),
+    };
+
+    let medicamentos_result = sqlx::query("SELECT nombre FROM public.obtener_nombre_medicamentos()")
+        .fetch_all(pool)
+        .await;
+
+    let medicamentos_recetados = match medicamentos_result {
+        Ok(rows) => {
+            let medicamentos: Vec<String> = rows.into_iter()
+                .map(|row| row.get::<String, _>("nombre"))
+                .collect();
+            medicamentos.join(", ") // Unimos los nombres de los medicamentos con una coma
+        }
+        Err(_) => String::new(),
+    };
+
+    let motivo_result = sqlx::query("SELECT public.obtener_motivo_cita($1) as motivo")
+        .bind(cita_id)
+        .fetch_one(pool)
+        .await;
+
+    let motivo_cita = match motivo_result {
+        Ok(row) => row.get::<String, _>("motivo"),
+        Err(_) => String::new(),
+    };
+
+    let auditoria = json!({
+        "fecha": fecha,
+        "nombre_paciente": nombre_paciente,
+        "nombre_doctor": nombre_doctor,
+        "motivo_cita": motivo_cita,
+        "diagnostico": diagnostico,
+        "medicamentos_recetados": medicamentos_recetados,
+    });
+
+    Ok(auditoria)
+}
+pub async fn registrar_auditoria_y_detalles(
+    pool: &PgPool,
+    cita_id: i32,
+    historia_id: i64,
+    client: &AppState,
+    payload: Value,
+) -> Result<impl IntoResponse, StatusCode> {
+    let auditoria_detalles = match obtener_detalles_auditoria(pool, cita_id, historia_id).await {
+        Ok(details) => details,
+        Err(_) => return Err(StatusCode::INTERNAL_SERVER_ERROR),
+    };
+
+    let mut auditoria_payload = auditoria_detalles;
+    auditoria_payload["id"] = payload.get("id").cloned().unwrap_or(Value::Null);
+
+    let auditoria_result = post_auditoria(client.clone(), Json(auditoria_payload)).await;
+
+    match auditoria_result {
+        Ok(response) => Ok(response),
+        Err(_) => Err(StatusCode::INTERNAL_SERVER_ERROR),
     }
 }
