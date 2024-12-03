@@ -166,3 +166,16 @@ begin
 end;
 $$ language plpgsql;
 
+
+create or replace function public.obtener_estado_cita(
+    p_cita_id int
+)
+returns varchar as $$
+begin
+    return (
+        select estado::varchar
+        from public.citas
+        where id = p_cita_id
+    );
+end;
+$$ language plpgsql;

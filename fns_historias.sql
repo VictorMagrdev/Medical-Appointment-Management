@@ -135,3 +135,25 @@ begin
     );
 end;
 $$ language plpgsql;
+
+
+
+--trigger
+
+create or replace function public.actualizar_estado_cita()
+returns trigger
+language plpgsql
+as $$
+begin
+    perform public.cambiar_estado_cita(NEW.cita_id, 'completada');
+    return NEW;
+end;
+$$;
+
+create trigger trigger_actualizar_estado_cita
+after insert on public.historias_clinicas
+for each row execute function public.actualizar_estado_cita();
+
+
+
+
