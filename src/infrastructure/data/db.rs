@@ -32,7 +32,7 @@ impl AppState {
 async fn connect_pg_db() -> Result<PgPool> {
     //postgres://postgres:postgres@localhost:5432/doctorya
     //postgres://postgres:EllenJoe@localhost:5432/doctorya
-    let database_url = "postgres://postgres:postgres@localhost:5432/doctorya";
+    let database_url = "postgres://postgres:EllenJoe@localhost:5432/doctorya";
 
     let db = match PgPoolOptions::new()
         .max_connections(5)
