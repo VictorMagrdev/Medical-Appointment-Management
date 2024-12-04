@@ -4,6 +4,7 @@ use axum::http::StatusCode;
 use axum::response::IntoResponse;
 use axum::Json;
 use serde_json::Value;
+use crate::application::command::auditoria::registrar_auditoria_y_detalles;
 
 pub async fn post_historia_clinica(
     State(state): State<AppState>,
@@ -21,6 +22,13 @@ pub async fn post_historia_clinica(
         return Err((
             StatusCode::INTERNAL_SERVER_ERROR,
             format!("Error al crear historia clínica: {e}"),
+        ));
+    }
+    if let Err(e) = registrar_auditoria_y_detalles(State(state), Json(payload)).await {
+        eprintln!("Error al registrar auditoría: {e}");
+        return Err((
+            StatusCode::INTERNAL_SERVER_ERROR,
+            "Error al registrar auditoría".to_string(),
         ));
     }
 
