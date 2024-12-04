@@ -7,8 +7,7 @@ use axum::Json;
 use bson::doc;
 use chrono::NaiveDate;
 use serde_json::{json, Value};
-use sqlx::{PgPool, Row};
-use crate::application::query::citas::verificar_estado_cita;
+use sqlx::{ Row};
 
 pub async fn post_auditoria(
     State(client): State<AppState>,
@@ -160,16 +159,27 @@ pub async fn put_auditoria_by_id(
         }
     }
 }
-
-//Para probar
-pub async fn obtener_detalles_auditoria(
+/*
     pool: &PgPool,
     cita_id: i32,
     historia_id: i64,
+*/
+//Para probar
+pub async fn obtener_detalles_auditoria(
+    State(client): State<AppState>,
+    Json(payload): Json<Value>,
 ) -> Result<Value, StatusCode> {
+    let cita_id = payload
+        .get("seguro_id")
+        .and_then(|v| v.as_i64())
+        .unwrap_or(0) as i32;
+    let historia_id = payload
+        .get("historia_id")
+        .and_then(|v| v.as_i64())
+        .unwrap_or(0);
     let fecha_result = sqlx::query("SELECT public.obtener_dia_cita($1) as fecha")
         .bind(cita_id)
-        .fetch_one(pool)
+        .fetch_one(&client.get_db_pg())
         .await;
 
     let fecha = match fecha_result {
@@ -179,7 +189,7 @@ pub async fn obtener_detalles_auditoria(
 
     let paciente_result = sqlx::query("SELECT public.obtener_paciente_cita($1) as paciente")
         .bind(cita_id)
-        .fetch_one(pool)
+        .fetch_one(&client.get_db_pg())
         .await;
 
     let nombre_paciente = match paciente_result {
@@ -189,7 +199,7 @@ pub async fn obtener_detalles_auditoria(
 
     let doctor_result = sqlx::query("SELECT public.obtener_medico_cita($1) as doctor")
         .bind(cita_id)
-        .fetch_one(pool)
+        .fetch_one(&client.get_db_pg())
         .await;
 
     let nombre_doctor = match doctor_result {
@@ -199,7 +209,7 @@ pub async fn obtener_detalles_auditoria(
 
     let diagnostico_result = sqlx::query("SELECT public.obtener_diagnostico_historia($1) as diagnostico")
         .bind(historia_id)
-        .fetch_one(pool)
+        .fetch_one(&client.get_db_pg())
         .await;
 
     let diagnostico = match diagnostico_result {
@@ -208,7 +218,7 @@ pub async fn obtener_detalles_auditoria(
     };
 
     let medicamentos_result = sqlx::query("SELECT nombre FROM public.obtener_nombre_medicamentos()")
-        .fetch_all(pool)
+        .fetch_all(&client.get_db_pg())
         .await;
 
     let medicamentos_recetados = match medicamentos_result {
@@ -223,7 +233,7 @@ pub async fn obtener_detalles_auditoria(
 
     let motivo_result = sqlx::query("SELECT public.obtener_motivo_cita($1) as motivo")
         .bind(cita_id)
-        .fetch_one(pool)
+        .fetch_one(&client.get_db_pg())
         .await;
 
     let motivo_cita = match motivo_result {
@@ -242,14 +252,19 @@ pub async fn obtener_detalles_auditoria(
 
     Ok(auditoria)
 }
-pub async fn registrar_auditoria_y_detalles(
+/*
     pool: &PgPool,
     cita_id: i32,
     historia_id: i64,
     client: &AppState,
     payload: Value,
+*/
+pub async fn registrar_auditoria_y_detalles(
+    State(client): State<AppState>,
+    Json(payload): Json<Value>,
 ) -> Result<impl IntoResponse, StatusCode> {
-    let auditoria_detalles = match obtener_detalles_auditoria(pool, cita_id, historia_id).await {
+
+    let auditoria_detalles = match obtener_detalles_auditoria(State(client.clone()), Json(payload.clone())).await {
         Ok(details) => details,
         Err(_) => return Err(StatusCode::INTERNAL_SERVER_ERROR),
     };
@@ -257,7 +272,7 @@ pub async fn registrar_auditoria_y_detalles(
     let mut auditoria_payload = auditoria_detalles;
     auditoria_payload["id"] = payload.get("id").cloned().unwrap_or(Value::Null);
 
-    let auditoria_result = post_auditoria(client.clone(), Json(auditoria_payload)).await;
+    let auditoria_result = post_auditoria(State(client), Json(auditoria_payload)).await;
 
     match auditoria_result {
         Ok(response) => Ok(response),

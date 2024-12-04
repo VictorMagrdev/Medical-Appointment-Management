@@ -1,3 +1,4 @@
+use axum::body::to_bytes;
 use crate::infrastructure::data::db::AppState;
 use axum::extract::{Path, State};
 use axum::http::StatusCode;
@@ -104,19 +105,18 @@ pub async fn obtener_estado_cita(
 pub async fn verificar_estado_cita(
     State(state): State<AppState>,
     Path(cita_id): Path<i32>,
-) -> Result<bool, impl IntoResponse> {
-    let result = obtener_estado_cita(State(state), Path(cita_id)).await;
+) -> Result<bool, (StatusCode, String)> {
+    let response = obtener_estado_cita(State(state), Path(cita_id)).await;
+    let body = axum::body::to_bytes(response.into_response().into_body(), usize::MAX).await
+        .map_err(|_| (StatusCode::INTERNAL_SERVER_ERROR, "Error al leer el cuerpo de la respuesta".to_string()))?;
 
-    match result {
-        Ok(Json(payload)) => {
-            if let Some(estado) = payload.get("estado").and_then(|v| v.as_str()) {
-                if estado == "completada" {
-                    return Ok(true);
-                }
-            }
-            Ok(false)
-        }
-        Err((status, msg)) => Err((status, msg)),
-    }
+    let payload: serde_json::Value = serde_json::from_slice(&body)
+        .map_err(|_| (StatusCode::INTERNAL_SERVER_ERROR, "Error al deserializar la respuesta JSON".to_string()))?;
+
+    let estado_completada = payload
+        .get("estado")
+        .and_then(|v| v.as_str())
+        .map_or(false, |estado| estado == "completada");
+
+    Ok(estado_completada)
 }
-
