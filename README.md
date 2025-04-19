@@ -1,1 +1,1 @@
-# bases2
+In this project, we developed a comprehensive medical management system, including user registration, appointment scheduling, doctor management, medication tracking, and result reporting. The core system logic was implemented directly within the database to enhance efficiency.
